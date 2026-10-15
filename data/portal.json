@@ -1,0 +1,98 @@
+{
+  "updated": "2026-10-15",
+  "links": {
+    "darwinbox": "https://pbhr.darwinbox.in/ms/db/home",
+    "salaryVideo": "https://drive.google.com/file/d/1u4nAmRDFBVTiRtAn1mIwZSVyQLIqK_7S/view?usp=sharing",
+    "reimbursement": "https://pbhr.darwinbox.in/ms/travelexpense/reports-expense/reports/id/1826609",
+    "reimbursementVideo": "https://drive.google.com/file/d/1JJwIwCZRasdTeE-jQwVUA1oczc_O46xE/view?usp=drive_link",
+    "passwordReset": "https://changepassword.etechaces.com/authorization.do",
+    "playStore": "https://play.google.com/store/apps/details?id=com.docprime.docprime&pcampaignid=web_share",
+    "appStore": "https://apps.apple.com/in/app/docprime/id6578436115",
+    "gmcHandbook": "https://pbconnect.policybazaar.com/content-detail/hrclick/groupmedicalcoverage",
+    "incentive": null
+  },
+  "medicalHelpline": "1800-309-4876",
+  "medicalLeadership": [
+    {"role": "Level 1 SPOC", "name": "Vikas Rajput"},
+    {"role": "Level 2 SPOC", "name": "Dhananjay Pandit"},
+    {"role": "Direct Escalation / Urgencies", "name": "Naveen Kumar (HR)"}
+  ],
+  "medicalContacts": [
+    {"role": "Standard Claims L1", "name": "Shubham Sehgal", "phone": "9355827180", "email": "shubhamsehgal@policybazaar.com"},
+    {"role": "Standard Claims L2", "name": "Rohit Singh", "phone": "9667228995", "email": "rohitsingh@policybazaar.com"},
+    {"role": "Cashless Claims L1 / Team Contact", "name": "Nalin Shekhar", "phone": "9355847496", "email": "cashlessclaims@policybazaar.com"},
+    {"role": "Cashless Claims L2", "name": "Vijay Pratap Singh", "phone": "7669180320", "email": "vijaypratap@policybazaar.com"},
+    {"role": "Reimbursement SPOC", "name": "Muskan Mishra", "phone": "9355827180", "email": "muskanmishra@policybazaar.com"},
+    {"role": "Servicing / Operations POC", "name": "Chetan Sharma", "phone": "8448590822", "email": "Chetansharmal@policybazaar.com"}
+  ],
+  "medicalEscalations": [
+    {"role": "Level 1", "name": "Vishal Tripathi", "phone": "9667399004", "email": "Vishaltriphati@policybazaar.com"},
+    {"role": "Level 2", "name": "Umesh Singh", "phone": "8448590822", "email": "umeshsingh@policybazaar.com"},
+    {"role": "Level 3", "name": "Naveen Kumar", "phone": "9625356360", "email": "naveen.k@policybazaar.com"},
+    {"role": "Level 4", "name": "Dhruv Shandil", "phone": "7760205119", "email": "dhruvshandil@policybazaar.com"}
+  ],
+  "hrLevels": [
+    {
+      "level": 1,
+      "title": "Regional contacts by vertical",
+      "contacts": [
+        {"region": "West", "vertical": "Life", "name": "Kritika Upadhyay", "phone": "9022442166", "email": "kritikaupadhyay@pbpartners.com"},
+        {"region": "West", "vertical": "Health", "name": "Aashif Mansuri", "phone": "9650926191", "email": "aashifmansuri@pbpartners.com"},
+        {"region": "North", "vertical": "Life, Health", "name": null, "phone": null, "email": null},
+        {"region": "South", "vertical": "Life, Health", "name": null, "phone": null, "email": null},
+        {"region": "East", "vertical": "Life, Health", "name": null, "phone": null, "email": null}
+      ]
+    },
+    {
+      "level": 2,
+      "title": "Regional escalation",
+      "contacts": [
+        {"region": "West", "name": "Yash Mehta", "phone": "9595255678", "email": "yashmehta@pbpartners.com"},
+        {"region": "North", "name": "Punarnava Sharma", "phone": null, "email": null},
+        {"region": "South", "name": "Kumar Bhaskar", "phone": null, "email": null},
+        {"region": "East", "name": "Soumyadeep Ghatak", "phone": null, "email": null}
+      ]
+    },
+    {
+      "level": 3,
+      "title": "All zones",
+      "contacts": [
+        {"region": "All zones", "name": "Rajan Gulati", "phone": null, "email": "rajang@policybazaar.com"}
+      ]
+    }
+  ],
+  "categories": {
+    "Payroll": ["Salary Slip", "Reimbursement & Claims", "Other Payroll Query"],
+    "IT Help Desk": ["Password Reset", "Hardware / Access Request", "Other IT Issue"],
+    "Medical GMC": ["Doc Prime App / Claim Issue", "Escalation", "Other GMC Query"],
+    "Sales Related Issues": ["Incentive Calculator", "CRM / Lead Assignment", "Other Sales Issue"],
+    "HR Helpdesk": ["General Query", "Escalation", "Other HR Issue"]
+  },
+  "ticket": {
+    "teams": {
+      "Payroll": null,
+      "IT Help Desk": null,
+      "Medical GMC": null,
+      "Sales Related Issues": null,
+      "HR Helpdesk": null
+    },
+    "hrCc": null
+  },
+  "itContact": null,
+  "contentWarnings": [
+    "9355827180 is listed for both Shubham Sehgal and Muskan Mishra. Confirm the shared number with the owner.",
+    "8448590822 is listed for both Chetan Sharma and Umesh Singh. Confirm the shared number with the owner.",
+    "Vishaltriphati@policybazaar.com may contain a spelling error; the supplied name is Vishal Tripathi. Preserved as supplied pending verification.",
+    "Chetansharmal@policybazaar.com may contain a lowercase l in place of the digit 1. Preserved as supplied pending verification.",
+    "Confirm the capitalised email addresses by sending a test mail.",
+    "Confirm whether Naveen Kumar (HR), Direct Escalation / Urgencies, is the same person as Naveen Kumar at GMC Level 3. Leadership contact details have not been inferred.",
+    "The GMC matrix came from a screenshot of a text summary. Verify it against the broker or insurer's official escalation matrix.",
+    "Confirm the differing policybazaar.com and pbpartners.com email domains.",
+    "The reimbursement URL points to reports/id/1826609. Confirm the correct Expenses entry URL with the Darwinbox owner.",
+    "Confirm sharing permissions on both Drive videos using an account other than the owner's account.",
+    "Check the password-reset and GMC handbook pages from a personal phone on mobile data; corporate network, VPN or company login may be required.",
+    "The Incentive Calculator URL and IT contact have not been supplied.",
+    "HR Level 1 contacts for North, South and East are missing; Level 2 phone and email details for these regions are missing.",
+    "Ticket team recipient mailboxes and HR CC have not been supplied. Automatic ticket delivery cannot be enabled until these details and a delivery service are configured."
+  ]
+}
