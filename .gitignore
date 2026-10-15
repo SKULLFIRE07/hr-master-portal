@@ -4,3 +4,4 @@ __pycache__/
 .impeccable/review/
 test-results/
 node_modules/
+.impeccable/hook.cache.json

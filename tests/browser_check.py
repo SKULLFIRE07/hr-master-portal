@@ -72,6 +72,9 @@ with sync_playwright() as p:
     page.screenshot(path=str(SHOTS/'desktop.png'),full_page=True,animations='disabled')
     for scheme in ['light','dark']:
         page.emulate_media(color_scheme=scheme,reduced_motion='reduce')
+        if sections.nth(0).get_attribute('aria-expanded')!='true':sections.nth(0).click()
+        page.get_by_role('tab',name='Salary Slip',exact=True).click()
+        page.evaluate('scrollTo(0,0)')
         page.set_viewport_size({'width':360,'height':900})
         page.screenshot(path=str(SHOTS/('mobile'+('-dark' if scheme=='dark' else '')+'.png')),full_page=True,animations='disabled')
         for i in range(5):
