@@ -1,35 +1,870 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="theme-color" content="#2f6feb">
-  <meta name="description" content="Your everyday employee guide to Payroll, IT, Medical, Sales and HR support.">
-  <title>HR Master Portal</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%232f6feb'/%3E%3Cpath d='M12 12v16m16-16v16M12 20h16' stroke='white' stroke-width='4'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css">
-  <script src="app.js" defer></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Master Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f6f9; --card:#ffffff; --ink:#1c2430; --sub:#5b6675;
+  --accent:#2f6feb; --accent-soft:#e8f0fe; --border:#e3e7ee;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14171c; --card:#1d2128; --ink:#eef1f5; --sub:#a2acb8;
+    --accent:#5b8def; --accent-soft:#22314d; --border:#2a2f38;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14171c; --card:#1d2128; --ink:#eef1f5; --sub:#a2acb8;
+  --accent:#5b8def; --accent-soft:#22314d; --border:#2a2f38;
+}
+*{box-sizing:border-box;}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+header{max-width:820px; margin:0 auto; padding:28px 20px 10px; display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap;}
+header h1{margin:0 0 6px; font-size:1.5rem;}
+header p{margin:0; color:var(--sub); font-size:0.9rem; max-width:480px;}
+.qr-box{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:10px; text-align:center;}
+.qr-box p{margin:6px 0 0; font-size:0.7rem; color:var(--sub);}
+main{max-width:820px; margin:0 auto; padding:10px 20px 60px;}
+.section{background:var(--card); border:1px solid var(--border); border-radius:14px; margin-bottom:14px; overflow:hidden;}
+.section-head{display:flex; align-items:center; gap:12px; padding:16px 18px; cursor:pointer; user-select:none;}
+.section-head .icon{width:36px; height:36px; border-radius:10px; background:var(--accent-soft); display:flex; align-items:center; justify-content:center; font-size:1.15rem; flex-shrink:0;}
+.section-head h2{margin:0; font-size:1.05rem; flex:1;}
+.chevron{transition:transform .2s; color:var(--sub);}
+.section.open .chevron{transform:rotate(180deg);}
+.section-body{max-height:0; overflow:hidden; transition:max-height .25s ease;}
+.section.open .section-body{max-height:8000px;}
+.tabs{display:flex; gap:6px; padding:0 18px; border-bottom:1px solid var(--border); flex-wrap:wrap;}
+.tab-btn{background:none; border:none; padding:10px 4px; margin-right:14px; font-size:0.85rem; color:var(--sub); cursor:pointer; border-bottom:2px solid transparent;}
+.tab-btn.active{color:var(--accent); border-bottom-color:var(--accent); font-weight:600;}
+.tab-panel{display:none; padding:16px 18px 20px;}
+.tab-panel.active{display:block;}
+.poc{background:var(--bg); border:1px dashed var(--border); border-radius:10px; padding:10px 12px; font-size:0.85rem; color:var(--sub); margin-bottom:10px;}
+.poc b{color:var(--ink); display:block; font-size:0.88rem; margin-bottom:2px;}
+.steps{margin:0 0 10px; padding-left:18px; font-size:0.88rem; color:var(--sub); line-height:1.6;}
+.actions{display:flex; gap:8px; flex-wrap:wrap;}
+.btn{padding:9px 14px; border-radius:8px; font-size:0.82rem; text-decoration:none; border:1px solid var(--border); color:var(--ink);}
+.btn.primary{background:var(--accent); border-color:var(--accent); color:#fff;}
+.tag{font-size:0.68rem; color:var(--accent); background:var(--accent-soft); padding:2px 8px; border-radius:999px; display:inline-block; margin-bottom:8px;}
+footer{max-width:820px; margin:0 auto; padding:10px 20px 40px; color:var(--sub); font-size:0.78rem;}
+
+/* escalation matrix */
+.esc-level{border:1px solid var(--border); border-radius:12px; margin-bottom:12px; overflow:hidden;}
+.esc-level summary{list-style:none; cursor:pointer; display:flex; align-items:center; gap:10px; padding:13px 16px; font-weight:700; font-size:0.9rem; color:var(--ink);}
+.esc-level summary::-webkit-details-marker{display:none;}
+.esc-level summary::before{content:"▸"; color:var(--accent); font-size:0.8rem; transition:transform .2s;}
+.esc-level[open] summary::before{transform:rotate(90deg);}
+.esc-level-body{padding:4px 16px 14px;}
+.esc-region{padding:12px 0 12px 14px; border-left:3px solid var(--accent-soft); margin:10px 0;}
+.esc-region-title{font-weight:600; font-size:0.82rem; color:var(--accent); text-transform:uppercase; letter-spacing:0.03em; margin-bottom:8px;}
+.esc-contact{padding:7px 0; border-bottom:1px solid var(--border); font-size:0.85rem; color:var(--sub); line-height:1.5;}
+.esc-contact:last-child{border-bottom:none;}
+.esc-contact .role{display:block; color:var(--ink); font-weight:600; font-size:0.86rem; margin-bottom:1px;}
+
+/* ===== Visual refresh ===== */
+:root{
+  --font-body:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-head:"Sora","Manrope",system-ui,sans-serif;
+  --hero-a:#0d2745; --hero-b:#0b6b78;
+  --shadow:0 1px 2px rgba(16,32,56,.06),0 8px 24px rgba(16,32,56,.07);
+  --c-teal:#0b8171; --c-blue:#2f6feb; --c-rose:#cf3a60; --c-amber:#b86e00; --c-violet:#6d4ae8; --c-green:#25853f;
+  --lv1:#1f8a4c; --lv2:#b86e00; --lv3:#c63d36; --lv4:#6d4ae8;
+  --note-bg:#fff4dc; --note-ink:#5b3c00;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);--note-bg:#3a2d0f;--note-ink:#ffd98a;color-scheme:dark;}
+}
+:root[data-theme="dark"]{--shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.35);--note-bg:#3a2d0f;--note-ink:#ffd98a;color-scheme:dark;}
+body{font-family:var(--font-body);}
+header{max-width:820px;width:calc(100% - 32px);margin:16px auto 10px;padding:26px 24px;border-radius:20px;background:linear-gradient(135deg,var(--hero-a),var(--hero-b));color:#fff;align-items:center;box-shadow:var(--shadow);}
+header h1{font-family:var(--font-head);font-size:1.7rem;letter-spacing:-.01em;color:#fff;}
+header p{color:rgba(255,255,255,.85);}
+.qr-box{background:#fff;border:0;border-radius:14px;padding:10px;}
+.qr-box p{color:#4a5565;}
+main .section:nth-of-type(1){--sa:var(--c-teal);}
+main .section:nth-of-type(2){--sa:var(--c-blue);}
+main .section:nth-of-type(3){--sa:var(--c-rose);}
+main .section:nth-of-type(4){--sa:var(--c-amber);}
+main .section:nth-of-type(5){--sa:var(--c-violet);}
+main .section:nth-of-type(6){--sa:var(--c-green);}
+.section{--sa-soft:color-mix(in srgb,var(--sa) 13%,var(--card));border-radius:18px;box-shadow:var(--shadow);}
+.section-head{transition:background .2s;}
+.section.open .section-head{background:var(--sa-soft);}
+.section-head .icon{width:40px;height:40px;border-radius:12px;background:var(--sa);color:#fff;font-size:1.2rem;}
+.section-head h2{font-family:var(--font-head);font-size:1.05rem;}
+.tabs{gap:8px;padding:12px 18px;}
+.tab-btn{border:1px solid var(--border);background:var(--card);border-radius:999px;padding:7px 14px;margin:0;color:var(--ink);font-family:inherit;font-weight:600;font-size:.82rem;}
+.tab-btn.active{background:var(--sa);border-color:var(--sa);color:#fff;}
+.tab-btn:focus-visible,.btn:focus-visible{outline:2px solid var(--sa);outline-offset:2px;}
+.btn{border-radius:10px;padding:10px 16px;font-weight:600;font-family:inherit;transition:transform .15s,box-shadow .15s;}
+.btn:hover{transform:translateY(-1px);}
+.btn.primary{background:var(--sa);border-color:var(--sa);color:#fff;box-shadow:0 4px 12px color-mix(in srgb,var(--sa) 35%,transparent);}
+.btn:not(.primary){background:var(--sa-soft);border-color:color-mix(in srgb,var(--sa) 35%,var(--border));}
+.tag{background:var(--sa-soft);color:var(--ink);}
+.poc{border:1px solid color-mix(in srgb,var(--sa) 35%,var(--border));background:var(--sa-soft);}
+.note{background:var(--note-bg);color:var(--note-ink);border:1px solid color-mix(in srgb,var(--c-amber) 50%,var(--border));border-radius:12px;padding:12px 14px;font-size:.88rem;line-height:1.5;margin:0 0 14px;}
+.note b{font-weight:700;}
+/* escalation flow */
+.lvl{--lv:var(--lv1);position:relative;margin:0 0 36px;}
+.lvl:nth-of-type(2){--lv:var(--lv2);}
+.lvl:nth-of-type(3){--lv:var(--lv3);}
+.lvl:nth-of-type(4){--lv:var(--lv4);}
+.lvl:last-of-type{margin-bottom:0;}
+.lvl:not(:last-of-type)::after{content:"";position:absolute;left:50%;top:100%;height:30px;border-left:2px dashed var(--lv);margin-left:-1px;}
+.lvl:not(:last-of-type)::before{content:"";position:absolute;left:50%;top:calc(100% + 24px);margin-left:-7px;border:7px solid transparent;border-top-color:var(--lv);border-bottom-width:0;}
+.esc-level{border:1.5px solid var(--lv);border-radius:14px;margin:0;overflow:visible;background:var(--card);box-shadow:var(--shadow);}
+.esc-level summary{background:var(--lv);color:#fff;padding:13px 18px;border-radius:12px;font-family:var(--font-head);font-size:.92rem;}
+.esc-level[open] summary{border-radius:12px 12px 0 0;}
+.esc-level summary::before{color:#fff;}
+.esc-level-body{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:12px;padding:16px;}
+.esc-region{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:10px;margin:0;padding:0 12px 12px;border:1px solid color-mix(in srgb,var(--lv) 30%,var(--border));border-radius:12px;background:color-mix(in srgb,var(--lv) 5%,var(--card));}
+.esc-region-title{grid-column:1/-1;margin:0 -12px;padding:9px 14px;background:color-mix(in srgb,var(--lv) 16%,var(--card));border-bottom:1px solid color-mix(in srgb,var(--lv) 30%,var(--border));border-radius:11px 11px 0 0;color:var(--ink);font-family:var(--font-head);font-size:.76rem;letter-spacing:.06em;}
+.esc-region-title::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--lv);margin-right:8px;}
+.esc-contact,.esc-contact:last-child{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;min-width:0;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.04);}
+.esc-contact .role{align-self:flex-start;display:inline-block;margin:0 0 2px;padding:3px 10px;border-radius:999px;font-size:.7rem;font-weight:700;color:var(--ink);background:color-mix(in srgb,var(--lv,var(--sa)) 18%,var(--card));border:1px solid color-mix(in srgb,var(--lv,var(--sa)) 45%,var(--border));}
+.f{display:grid;grid-template-columns:6.4rem minmax(0,1fr);gap:8px;align-items:baseline;}
+.f .k{font-size:.66rem;text-transform:uppercase;letter-spacing:.05em;color:var(--sub);font-weight:700;}
+.f .v{font-size:.86rem;color:var(--ink);overflow-wrap:anywhere;font-weight:600;}
+.f .v a{color:var(--accent);text-decoration:none;}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:12px;}
+/* benefits */
+.bn-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));}
+.bn-card{--c:var(--c-teal);border:1px solid var(--border);border-radius:14px;background:var(--card);overflow:hidden;min-width:0;box-shadow:var(--shadow);}
+.bn-card:nth-child(2){--c:var(--c-blue);}
+.bn-card:nth-child(3){--c:var(--c-violet);}
+.bn-card h3{margin:0;padding:12px 14px;font-family:var(--font-head);font-size:.92rem;background:var(--c);color:#fff;}
+.bn-body{padding:14px;display:flex;flex-direction:column;gap:16px;}
+.bn-grp h4{margin:0;display:inline-block;padding:3px 10px;border-radius:999px;font-size:.74rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink);background:color-mix(in srgb,var(--c) 16%,var(--card));border:1px solid color-mix(in srgb,var(--c) 40%,var(--border));}
+.bn-grp ul{margin:8px 0 0;padding-left:18px;font-size:.84rem;line-height:1.55;color:var(--sub);}
+.bn-grp li{margin-bottom:5px;}
+.bn-grp li b{color:var(--ink);}
+@media (prefers-reduced-motion: reduce){.btn,.section-head{transition:none;}}
+
+/* ===== Sky blue frame, multicolour tabs ===== */
+:root{--sky:#0ea5e9;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--sky:#38bdf8;}}
+:root[data-theme="dark"]{--sky:#38bdf8;}
+body{border:6px solid var(--sky);min-height:100vh;}
+.f{grid-template-columns:7rem minmax(0,1fr);}
+.f .k{display:flex;justify-content:space-between;gap:4px;text-transform:none;letter-spacing:0;font-size:.8rem;font-weight:600;}
+.f .k::after{content:":";}
+.tabs .tab-btn{--tc:#2f6feb;}
+.tabs .tab-btn:nth-child(1){--tc:#0b8171;}
+.tabs .tab-btn:nth-child(2){--tc:#cf3a60;}
+.tabs .tab-btn:nth-child(3){--tc:#b86e00;}
+.tabs .tab-btn:nth-child(4){--tc:#6d4ae8;}
+.tabs .tab-btn:nth-child(5){--tc:#25853f;}
+.tabs .tab-btn:nth-child(6){--tc:#2f6feb;}
+.tab-btn{background:color-mix(in srgb,var(--tc) 12%,var(--card));border:1.5px solid color-mix(in srgb,var(--tc) 55%,var(--border));color:var(--ink);transition:background .15s,transform .15s;}
+.tab-btn:hover{background:color-mix(in srgb,var(--tc) 24%,var(--card));transform:translateY(-1px);}
+.tab-btn.active{background:var(--tc);border-color:var(--tc);color:#fff;box-shadow:0 4px 10px color-mix(in srgb,var(--tc) 35%,transparent);}
+.tab-btn:focus-visible{outline:2px solid var(--tc);outline-offset:2px;}
+
+/* ===== Black contact borders, darker steps ===== */
+:root{--edge:#000;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--edge:#e6edf3;}}
+:root[data-theme="dark"]{--edge:#e6edf3;}
+.esc-contact,.esc-contact:last-child{border:1.5px solid var(--edge);}
+.steps,.steps li{color:var(--ink);}
+
+/* ===== Sky blue page fill ===== */
+:root{--page:#60a5fa;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page:#0a2a8f;--foot:#e6efff;}}
+:root[data-theme="dark"]{--page:#0a2a8f;--foot:#e6efff;}
+body{background:var(--page);}
+footer{color:var(--foot,#0b2a5b);}
+
+/* ===== Logo ===== */
+.logo{width:84px;height:84px;border-radius:50%;border:3px solid #fff;box-shadow:0 4px 14px rgba(0,0,0,.25);flex-shrink:0;}
+
+/* ===== Black borders ===== */
+body{border:6px solid #000;}
+.section{border:2px solid var(--edge);}
+
+/* ===== Steps box ===== */
+.steps-box{border:2px solid var(--edge);border-radius:12px;background:var(--card);padding:12px 16px 12px 10px;margin:0 0 12px;}
+.steps-box .steps{margin:0;padding-left:26px;}
+
+/* ===== Layout: laptop and mobile ===== */
+header,main,footer{max-width:1080px;}
+main .section:nth-of-type(6){--sa:#25853f;}
+main .section:nth-of-type(7){--sa:#c2410c;}
+.section{scroll-margin-top:12px;}
+.section-head{min-height:60px;}
+.tab-btn{min-height:40px;}
+.actions .btn{display:inline-flex;align-items:center;justify-content:center;min-height:42px;}
+.tab-panel{padding:16px 20px 22px;}
+@media (min-width:900px){
+  .section-head{padding:18px 24px;}
+  .section-head h2{font-size:1.15rem;}
+  .tabs{padding:14px 24px;}
+  .tab-panel{padding:18px 24px 26px;}
+  .steps{font-size:.95rem;}
+}
+@media (max-width:600px){
+  body{border-width:4px;}
+  header{width:calc(100% - 20px);margin:10px auto 8px;padding:18px 16px;gap:12px;flex-wrap:nowrap;}
+  header h1{font-size:1.35rem;}
+  header p{font-size:.84rem;}
+  .logo{width:60px;height:60px;border-width:2px;}
+  main{padding:6px 10px 40px;}
+  .section{border-radius:14px;margin-bottom:10px;}
+  .section-head{padding:14px 14px;gap:10px;}
+  .section-head .icon{width:36px;height:36px;}
+  .tabs{padding:10px 12px;gap:6px;}
+  .tab-btn{padding:8px 12px;font-size:.84rem;}
+  .tab-panel{padding:12px 12px 18px;}
+  .actions{flex-direction:column;}
+  .actions .btn{width:100%;text-align:center;}
+  .esc-level-body{padding:12px;}
+  .esc-contact,.esc-contact:last-child{padding:12px;}
+  .f{grid-template-columns:6.2rem minmax(0,1fr);}
+  .steps-box{padding:10px 12px 10px 4px;}
+}
+@media (max-width:360px){
+  .f{grid-template-columns:1fr;gap:0;}
+  .f .k{justify-content:flex-start;}
+}
+
+/* ===== Nested support tabs ===== */
+.subtabs{border:1.5px solid color-mix(in srgb,var(--sa) 45%,var(--border));border-radius:14px;background:color-mix(in srgb,var(--sa) 4%,var(--card));overflow:hidden;}
+.subtabs>.tabs{border-bottom:1px solid var(--border);}
+.subtabs>.tab-panel{padding:14px 16px 20px;}
+.sub-h{margin:4px 0 10px;font-family:var(--font-head);font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink);}
+.sub-h:not(:first-child){margin-top:20px;}
+.esc-wrap{display:block;}
+@media (max-width:600px){.subtabs>.tab-panel{padding:12px 10px 16px;}}
+
+/* ===== Support matrix groups ===== */
+.grp{--lv:var(--sa);margin:0 0 12px;}
+.sub-h2{margin:16px 0 10px;font-size:.8rem;font-weight:700;color:var(--ink);padding-bottom:4px;border-bottom:2px solid color-mix(in srgb,var(--sa) 50%,var(--border));display:inline-block;}
+.sub-h2:first-child{margin-top:4px;}
+.esc-contact .role{border-radius:14px;line-height:1.35;}
+
+/* ===== Region dropdowns ===== */
+.reg-dd{grid-column:1/-1;border:1.5px solid color-mix(in srgb,var(--lv) 55%,var(--border));border-radius:12px;background:var(--card);overflow:hidden;}
+.reg-dd summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;min-height:50px;padding:12px 16px;font-family:var(--font-head);font-weight:700;font-size:.9rem;color:var(--ink);background:color-mix(in srgb,var(--lv) 12%,var(--card));}
+.reg-dd summary::-webkit-details-marker{display:none;}
+.reg-dd summary::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--lv);flex-shrink:0;}
+.reg-dd summary::after{content:"▾";margin-left:auto;color:var(--ink);transition:transform .2s;}
+.reg-dd[open] summary::after{transform:rotate(180deg);}
+.reg-dd[open] summary{border-bottom:1.5px solid color-mix(in srgb,var(--lv) 45%,var(--border));}
+.reg-dd summary:focus-visible{outline:2px solid var(--lv);outline-offset:-2px;}
+.reg-body{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:10px;padding:12px;}
+
+/* ===== App shell, fills and polish ===== */
+:root{
+  --s1:#0b7a6c; --s2:#2563eb; --s3:#cf3a60; --s4:#a35c00; --s5:#6d4ae8; --s6:#25853f; --s7:#c2410c;
+  --page-soft:#cfe5ff; --lift:0 2px 6px rgba(8,30,80,.10),0 10px 28px rgba(8,30,80,.16);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--page-soft:#0a1f4a;--lift:0 2px 6px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.45);}}
+:root[data-theme="dark"]{--page-soft:#0a1f4a;--lift:0 2px 6px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.45);}
+body{background:var(--page) linear-gradient(165deg,#2f6feb 0%,#60a5fa 42%,#a8d0fd 100%) no-repeat;}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) body{background:var(--page) linear-gradient(165deg,#06183d,#0a2a8f 55%,#0d3a8c) no-repeat;}}
+:root[data-theme="dark"] body{background:var(--page) linear-gradient(165deg,#06183d,#0a2a8f 55%,#0d3a8c) no-repeat;}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--page-soft);}
+header,footer{max-width:1180px;}
+header{width:calc(100% - 32px);box-shadow:var(--lift);border:2px solid var(--edge);}
+.app{width:calc(100% - 32px);max-width:1180px;margin:0 auto;padding:0 0 12px;display:grid;grid-template-columns:minmax(0,1fr);gap:12px;}
+main{max-width:none;margin:0;padding:0;min-width:0;}
+footer{width:fit-content;max-width:calc(100% - 32px);margin:8px auto 28px;padding:9px 18px;border:2px solid var(--edge);border-radius:999px;background:var(--card);color:var(--ink);font-weight:600;text-align:center;}
+/* section navigation */
+.appnav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;gap:8px;overflow-x:auto;padding:10px 2px;margin:0 -2px;scrollbar-width:none;background:color-mix(in srgb,var(--page-soft) 90%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-radius:14px;}
+.appnav::-webkit-scrollbar{display:none;}
+.nav-item{--sa:var(--s1);flex:0 0 auto;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:8px 14px;border-radius:999px;border:2px solid var(--edge);background:var(--card);color:var(--ink);font-family:inherit;font-weight:700;font-size:.86rem;cursor:pointer;white-space:nowrap;transition:background .15s,transform .15s;}
+.nav-item:nth-child(2){--sa:var(--s2);} .nav-item:nth-child(3){--sa:var(--s3);} .nav-item:nth-child(4){--sa:var(--s4);}
+.nav-item:nth-child(5){--sa:var(--s5);} .nav-item:nth-child(6){--sa:var(--s6);} .nav-item:nth-child(7){--sa:var(--s7);}
+.nav-item:hover{background:color-mix(in srgb,var(--sa) 16%,var(--card));}
+.nav-item.active{background:var(--sa);color:#fff;box-shadow:0 4px 12px color-mix(in srgb,var(--sa) 45%,transparent);}
+.nav-item:focus-visible{outline:3px solid var(--sa);outline-offset:2px;}
+.nav-ic{font-size:1.05rem;line-height:1;}
+/* section cards */
+main .section:nth-of-type(1){--sa:var(--s1);} main .section:nth-of-type(2){--sa:var(--s2);} main .section:nth-of-type(3){--sa:var(--s3);}
+main .section:nth-of-type(4){--sa:var(--s4);} main .section:nth-of-type(5){--sa:var(--s5);} main .section:nth-of-type(6){--sa:var(--s6);}
+main .section:nth-of-type(7){--sa:var(--s7);}
+.section{display:none;margin:0;border:2px solid var(--edge);border-radius:20px;background:var(--card);box-shadow:var(--lift);overflow:hidden;}
+.section.open{display:block;}
+.section .section-head{cursor:default;background:var(--sa);color:#fff;padding:18px 22px;gap:14px;align-items:center;}
+.section.open .section-head{background:var(--sa);}
+.section .section-head .icon{width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.55);color:#fff;font-size:1.3rem;}
+.sh-t{flex:1;min-width:0;}
+.section-head h2{margin:0;color:#fff;font-size:1.25rem;}
+.section-head p{margin:2px 0 0;font-size:.86rem;color:rgba(255,255,255,.9);}
+.section .chevron{display:none;}
+.section.open .section-body{max-height:none;overflow:visible;transition:none;background:color-mix(in srgb,var(--sa) 8%,var(--card));}
+.tabs{background:color-mix(in srgb,var(--sa) 16%,var(--card));border-bottom:2px solid var(--edge);}
+.subtabs{background:var(--card);border:2px solid var(--edge);}
+.subtabs>.tabs{background:color-mix(in srgb,var(--sa) 10%,var(--card));border-bottom:2px solid var(--edge);}
+.subtabs>.tab-panel{background:color-mix(in srgb,var(--sa) 5%,var(--card));}
+/* boxes */
+.lead{background:var(--card);border:1.5px solid color-mix(in srgb,var(--sa) 55%,var(--border));border-radius:12px;padding:12px 14px;margin:0 0 14px;line-height:1.6;color:var(--ink);font-size:.92rem;}
+.steps-box{background:var(--card);border:2px solid var(--edge);border-radius:14px;padding:14px 18px 14px 12px;margin:0 0 14px;box-shadow:0 2px 0 color-mix(in srgb,var(--sa) 35%,transparent);}
+.steps-box .steps{margin:0;padding-left:28px;color:var(--ink);line-height:1.7;}
+.steps-box li{padding:3px 0 3px 4px;}
+.steps-box li::marker{color:var(--sa);font-weight:800;}
+.steps-label{margin:20px 0 10px;font-weight:800;font-size:.95rem;color:var(--ink);display:flex;align-items:center;gap:8px;}
+.steps-label::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--sa);}
+.steps-label a{color:var(--ink);font-weight:700;}
+.note,.poc{background:var(--card);border:2px solid var(--edge);border-radius:14px;color:var(--ink);}
+.poc b{color:var(--ink);}
+/* contact cards */
+.esc-contact,.esc-contact:last-child{background:var(--card);border:2px solid var(--edge);border-radius:14px;padding:14px;gap:8px;box-shadow:0 2px 0 color-mix(in srgb,var(--lv,var(--sa)) 40%,transparent);}
+.chead{display:flex;align-items:center;gap:10px;min-width:0;margin-bottom:2px;}
+.av{flex:0 0 auto;width:38px;height:38px;border-radius:50%;background:var(--lv,var(--sa));color:#fff;display:grid;place-items:center;font-weight:800;font-size:.8rem;letter-spacing:.02em;}
+.chead .role{margin:0;align-self:center;min-width:0;}
+.f .v a{color:var(--edge);font-weight:700;text-decoration:none;}
+.f .v a:hover{text-decoration:underline;}
+.f .k{color:var(--sub);}
+/* benefits */
+.bn-card{border:2px solid var(--edge);border-radius:16px;}
+.bn-card h3{padding:14px 16px;font-size:1rem;border-bottom:2px solid var(--edge);}
+.bn-body{padding:14px;gap:14px;background:color-mix(in srgb,var(--c) 7%,var(--card));}
+.bn-grp{background:var(--card);border:1.5px solid var(--edge);border-radius:12px;padding:12px;}
+.bn-grp ul{list-style:none;padding:0;margin:10px 0 0;}
+.bn-grp li{position:relative;margin:0;padding:8px 0 8px 24px;border-top:1px dashed var(--border);color:var(--ink);line-height:1.5;}
+.bn-grp li:first-child{border-top:0;}
+.bn-grp li::before{content:"✓";position:absolute;left:2px;top:8px;color:var(--c);font-weight:800;}
+.bn-grp li b{color:var(--ink);}
+/* buttons */
+.btn{border-radius:12px;padding:11px 18px;border:2px solid color-mix(in srgb,var(--sa) 70%,#000);}
+.btn.primary{background:var(--sa);color:#fff;}
+.btn:not(.primary){background:var(--card);color:var(--ink);border-color:var(--edge);}
+.reg-dd summary,.esc-level summary{min-height:50px;}
+@media (min-width:960px){
+  .app{grid-template-columns:250px minmax(0,1fr);gap:20px;align-items:start;}
+  .appnav{top:16px;flex-direction:column;gap:8px;overflow:visible;padding:14px;margin:0;background:var(--card);border:2px solid var(--edge);border-radius:18px;box-shadow:var(--lift);-webkit-backdrop-filter:none;backdrop-filter:none;}
+  .appnav::before{content:"Menu";font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--sub);padding:0 4px 2px;}
+  .nav-item{width:100%;border-radius:12px;border:1.5px solid var(--border);padding:10px 12px;}
+  .nav-item.active{border-color:var(--edge);}
+  .section .section-head{padding:22px 28px;}
+  .section-head h2{font-size:1.4rem;}
+  .tabs{padding:16px 28px;}
+  .tab-panel{padding:22px 28px 30px;}
+}
+@media (max-width:600px){
+  .app{width:calc(100% - 20px);gap:8px;}
+  header{width:calc(100% - 20px);}
+  .section{border-radius:16px;}
+  .section .section-head{padding:14px 14px;}
+  .section .section-head .icon{width:40px;height:40px;}
+  .section-head h2{font-size:1.1rem;}
+  .section-head p{font-size:.8rem;}
+  .steps-box{padding:12px 12px 12px 6px;}
+}
+@media (prefers-reduced-motion: reduce){.nav-item{transition:none;}}
+
+/* ===== Emails on one line ===== */
+.f{grid-template-columns:6.4rem minmax(0,1fr);}
+.f .v a[href^="mailto"]{white-space:nowrap;overflow-wrap:normal;}
+.cgrid,.esc-level-body,.reg-body{grid-template-columns:repeat(auto-fill,minmax(min(100%,370px),1fr));}
+@media (max-width:600px){
+  .f{grid-template-columns:1fr;gap:1px;}
+  .f .k{justify-content:flex-start;gap:3px;}
+  .f .v{font-size:.84rem;}
+  .esc-contact,.esc-contact:last-child{padding:12px;}
+}
+
+/* ===== Fit emails on one line (tuning) ===== */
+@media (min-width:601px){
+  .f{grid-template-columns:5.8rem minmax(0,1fr);}
+  .f .k{font-size:.76rem;}
+  .f .v a[href^="mailto"]{font-size:.8rem;}
+  .esc-contact,.esc-contact:last-child{padding:14px 12px;}
+}
+@media (max-width:400px){
+  .f .v{font-size:.78rem;}
+  .f .v a[href^="mailto"]{font-size:.76rem;}
+  .tab-panel{padding:10px 8px 14px;}
+  .subtabs>.tab-panel{padding:10px 6px 14px;}
+  .esc-level-body,.reg-body{padding:8px;}
+  .esc-contact,.esc-contact:last-child{padding:10px;}
+}
+@media (max-width:340px){.f .v a[href^="mailto"]{font-size:.68rem;}}
+
+/* ===== Compact contact tiles ===== */
+header,footer,.app{max-width:1320px;}
+.cgrid,.esc-level-body,.reg-body{grid-template-columns:repeat(auto-fill,minmax(min(100%,262px),1fr));gap:8px;}
+.esc-level-body{padding:12px;}
+.reg-body{padding:10px;}
+.esc-contact,.esc-contact:last-child{padding:9px 11px 10px;gap:2px;border-radius:12px;box-shadow:0 1px 0 color-mix(in srgb,var(--lv,var(--sa)) 40%,transparent);}
+.chead{gap:8px;margin-bottom:3px;}
+.av{width:28px;height:28px;font-size:.68rem;}
+.esc-contact .role{padding:2px 9px;font-size:.68rem;line-height:1.3;}
+.f{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:6px;row-gap:0;padding:1px 0;}
+.f .k{flex:0 0 5.8rem;display:flex;justify-content:space-between;gap:3px;font-size:.74rem;}
+.f .v{flex:1 1 auto;min-width:0;font-size:.84rem;line-height:1.35;}
+.f .v a[href^="mailto"]{font-size:.8rem;white-space:nowrap;}
+.subtabs>.tab-panel{padding:12px;}
+.sub-h{margin:2px 0 8px;}
+.sub-h2{margin:12px 0 8px;}
+
+@media (max-width:480px){.f .v a[href^="mailto"]{font-size:.76rem;}}
+@media (max-width:360px){.f .k{flex-basis:5.4rem;}.f .v a[href^="mailto"]{font-size:.72rem;}}
+@media (max-width:330px){.f .v a[href^="mailto"]{font-size:.66rem;}}
+
+@media (max-width:700px){.cgrid,.esc-level-body,.reg-body{grid-template-columns:minmax(0,1fr);}}
+@media (max-width:330px){.f .v a[href^="mailto"]{font-size:.6rem;}.esc-level-body,.reg-body{padding:6px;}.esc-level-body{padding:8px 6px;}}
+
+.f .k{white-space:nowrap;flex:0 0 6.3rem;}
+@media (max-width:360px){.f .k{flex-basis:5.9rem;font-size:.7rem;}}
+
+/* ===== EAP care card ===== */
+.care{background:linear-gradient(135deg,color-mix(in srgb,var(--sa) 16%,var(--card)),var(--card));border:2px solid var(--edge);border-radius:18px;padding:22px 22px 24px;max-width:760px;}
+.care h3{margin:0 0 10px;font-family:var(--font-head);font-size:1.3rem;line-height:1.3;color:var(--ink);text-wrap:balance;}
+.care p{margin:0 0 16px;font-size:.98rem;line-height:1.65;color:var(--ink);max-width:62ch;}
+.care .actions{margin:0;}
+@media (max-width:600px){.care{padding:18px 16px 20px;}.care h3{font-size:1.15rem;}}
+</style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to services</a>
-  <div class="page">
-    <header class="masthead">
-      <div class="brand">
-        <div class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 27V8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v19M4 27h24M13 27v-6h6v6M12 11h1m6 0h1m-8 5h1m6 0h1"/></svg></div>
-        <div><h1>HR Master Portal</h1><p>Everything you need for day-to-day HR — Payroll, IT, Medical, Sales, and HR support in one place.</p></div>
-      </div>
-      <aside class="qr-box" aria-label="Open on your phone">
-        <a href="assets/hr-portal-qr.png" download="hr-portal-qr.png" aria-label="Download the portal QR code"><img id="portal-qr" src="assets/hr-portal-qr.svg" width="82" height="82" alt="QR code for this portal" onerror="this.closest('.qr-box').hidden=true"></a>
-        <span>Scan to open<br>on mobile</span>
-      </aside>
-    </header>
-    <main id="main" tabindex="-1">
-      <div class="intro"><div><h2>How can we help?</h2><p>Choose a service to get started.</p></div><span class="service-count">5 services</span></div>
-      <div id="portal" aria-live="polite"><div class="load-state" role="status"><span class="loading-dot"></span> Getting your services ready…</div></div>
-      <noscript><div class="notice">JavaScript is needed to display the service directory. Please enable JavaScript and reload this page.</div></noscript>
-    </main>
-    <footer><span id="updated">HR Analytics &amp; Operations</span><span>Here for your everyday.</span></footer>
+<header>
+  <div>
+    <h1>Master Portal</h1>
+    <p>Payroll, IT, Mediclaim, Sales, HR, Benefits and Travel support in one place.</p>
   </div>
+  <img class="logo" src="pbp-logo.png" alt="PBP logo" width="84" height="84">
+</header>
+<div class="app">
+<nav class="appnav" aria-label="Sections">
+  <button type="button" class="nav-item active" data-sec="payroll"><span class="nav-ic">💰</span><span class="nav-tx">Payroll</span></button>
+  <button type="button" class="nav-item" data-sec="it-help-desk"><span class="nav-ic">💻</span><span class="nav-tx">IT Help Desk</span></button>
+  <button type="button" class="nav-item" data-sec="mediclaim"><span class="nav-ic">🏥</span><span class="nav-tx">Mediclaim</span></button>
+  <button type="button" class="nav-item" data-sec="sales-support"><span class="nav-ic">📈</span><span class="nav-tx">Sales Support</span></button>
+  <button type="button" class="nav-item" data-sec="hr-helpdesk"><span class="nav-ic">🙋</span><span class="nav-tx">HR Helpdesk</span></button>
+  <button type="button" class="nav-item" data-sec="employee-benefits"><span class="nav-ic">🎁</span><span class="nav-tx">Employee Benefits</span></button>
+  <button type="button" class="nav-item" data-sec="travel-ec"><span class="nav-ic">✈️</span><span class="nav-tx">Travel &amp; EC</span></button>
+</nav>
+<main>
+
+<!-- 1. PAYROLL -->
+<div class="section" id="sec-payroll">
+  <div class="section-head">
+    <div class="icon">💰</div><div class="sh-t"><h2>Payroll</h2><p>Salary slips, reimbursements and flexi benefits</p></div>
+  </div>
+  <div class="section-body">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab(this,'pay-1')">Salary Slip</button>
+      <button class="tab-btn" onclick="showTab(this,'pay-2')">Reimbursement &amp; Claims</button>
+      <button class="tab-btn" onclick="showTab(this,'pay-3')">How to Use Flexi Benefits</button>
+    </div>
+    <div class="tab-panel active" id="pay-1">
+      <p class="steps lead">Download your salary slip from Darwinbox using the link below. Watch the video for a step-by-step walkthrough.</p>
+      <div class="actions">
+        <a class="btn primary" href="https://pbsso.policybazaar.com/" target="_blank">Open Darwinbox</a>
+        <a class="btn" href="https://drive.google.com/file/d/1u4nAmRDFBVTiRtAn1mIwZSVyQLIqK_7S/view?usp=sharing" target="_blank">Watch: How to download salary slip</a>
+      </div>
+    </div>
+    <div class="tab-panel" id="pay-2">
+      <div class="steps-box">
+        <ol class="steps">
+        <li>Click on the Expenses tab.</li>
+        <li>Click Create Report (name the report, e.g. "Sampark Travel").</li>
+        <li>Click on the Expense tab and upload the bill.</li>
+        <li>Select the appropriate category (e.g. Travel and Accommodation), then select expense type, date, and enter other required details, and submit.</li>
+        <li>Click the 3 dots on the left, add the expense to the report created, and click Submit.</li>
+      </ol>
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="https://pbsso.policybazaar.com/" target="_blank">Open Reimbursement Portal</a>
+        <a class="btn" href="https://drive.google.com/file/d/1JJwIwCZRasdTeE-jQwVUA1oczc_O46xE/view?usp=drive_link" target="_blank">Watch: How to submit &amp; claim</a>
+      </div>
+    </div>
+    <div class="tab-panel" id="pay-3">
+      <div class="actions">
+        <a class="btn primary" href="https://docs.google.com/presentation/d/1qxSIKwJ5mHoH5wcVCtzABSmiO4b6nWtk/edit?usp=drive_link&ouid=108181228430405730551&rtpof=true&sd=true" target="_blank">View: How to use Flexi Benefits (Guide)</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. IT HELP DESK -->
+<div class="section" id="sec-it-help-desk">
+  <div class="section-head">
+    <div class="icon">💻</div><div class="sh-t"><h2>IT Help Desk</h2><p>Password reset and IT contacts</p></div>
+  </div>
+  <div class="section-body">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab(this,'it-1')">Password Reset</button>
+      <button class="tab-btn" onclick="showTab(this,'it-2')">IT POC</button>
+    </div>
+    <div class="tab-panel active" id="it-1">
+      <div class="steps-box">
+        <ol class="steps">
+          <li>Click the link and open the portal.</li>
+          <li>Enter your username and existing password and log in.</li>
+          <li>Follow the steps and enter and re-enter the new password.</li>
+          <li>Click Submit.</li>
+        </ol>
+      </div>
+      <div class="actions"><a class="btn primary" href="https://changepassword.etechaces.com/authorization.do" target="_blank">Password Reset Link</a></div>
+      <p class="steps-label">If you forgot your password</p>
+      <div class="steps-box">
+        <ol class="steps">
+          <li>Once the link is open, click the "Forgot your password?" option.</li>
+          <li>Enter your username and click Continue.</li>
+          <li>Choose Authenticator or Security Question, then click Continue.</li>
+          <li>For Authenticator: enter the code generated on your mobile. For Security Question: answer the question set by you.</li>
+          <li>Click Submit.</li>
+        </ol>
+      </div>
+    </div>
+    <div class="tab-panel" id="it-2">
+      <div class="cgrid">
+      <div class="esc-contact"><span class="role">Password Reset / IT Related</span><div class="f"><span class="k">Name</span><span class="v">IT DL</span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:ithelpdesk@pbpartners.com">ithelpdesk@pbpartners.com</a></span></div></div>
+      <div class="esc-contact"><span class="role">Password Reset / IT Related</span><div class="f"><span class="k">Name</span><span class="v">Ajay Kumar Gautam</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:09599352529">095993 52529</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:ajaygautam@policybazaar.com">ajaygautam@policybazaar.com</a></span></div></div>
+      <div class="esc-contact"><span class="role">Password Reset / IT Related</span><div class="f"><span class="k">Name</span><span class="v">Sanidhya Shrivastava</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8796324009">8796324009</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:sanidhyashrivastava@policybazaar.com">sanidhyashrivastava@policybazaar.com</a></span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. MEDICAL GMC -->
+<div class="section" id="sec-mediclaim">
+  <div class="section-head">
+    <div class="icon">🏥</div><div class="sh-t"><h2>Mediclaim</h2><p>Doc Prime app, handbook and escalation contacts</p></div>
+  </div>
+  <div class="section-body">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab(this,'gmc-1')">Doc Prime App</button>
+      <button class="tab-btn" onclick="showTab(this,'gmc-2')">Escalation Matrix</button>
+      <button class="tab-btn" onclick="showTab(this,'gmc-3')">Claim Form</button>
+      <button class="tab-btn" onclick="showTab(this,'gmc-4')">EAP</button>
+    </div>
+    <div class="tab-panel active" id="gmc-1">
+      <p class="steps lead">Download the Doc Prime app to view your GMC policy, find network hospitals, and raise cashless/reimbursement claims.</p>
+      <div class="poc"><b>Policybazaar Claim Support Helpline</b>1800-309-4876</div>
+      <div class="actions">
+        <a class="btn primary" href="https://play.google.com/store/apps/details?id=com.docprime.docprime&pcampaignid=web_share" target="_blank">Play Store</a>
+        <a class="btn primary" href="https://apps.apple.com/in/app/docprime/id6578436115" target="_blank">App Store</a>
+        <a class="btn primary" href="https://drive.google.com/file/d/128cpJ_2P3L7rL1hp-AFPo4DHhooMLgkG/view?usp=drive_link" target="_blank">GMC Handbook</a>
+      </div>
+    </div>
+    <div class="tab-panel" id="gmc-2">
+      <div class="lvl"><details class="esc-level" open>
+        <summary>SPOC Structure &amp; Leadership Escalation</summary>
+        <div class="esc-level-body">
+          <div class="esc-contact"><span class="role">Level 1 SPOC</span><div class="f"><span class="k">Name</span><span class="v">Vikas Rajput</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8448590822">8448590822</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:gmc@policybazaar.com">gmc@policybazaar.com</a></span></div></div>
+          <div class="esc-contact"><span class="role">Level 2 SPOC</span><div class="f"><span class="k">Name</span><span class="v">Vikas Agrawal</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:+918448983915">+91 84489 83915</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:gmc@policybazaar.com">gmc@policybazaar.com</a></span></div></div>
+          <div class="esc-contact"><span class="role">Direct Escalation / Urgencies</span><div class="f"><span class="k">Name</span><span class="v">Nakul Sharma (HR)</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8699852885">86998 52885</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:gmc@policybazaar.com">gmc@policybazaar.com</a></span></div></div>
+        </div>
+      </details></div>
+      <div class="lvl"><details class="esc-level">
+        <summary>Claims &amp; Servicing — Contacts</summary>
+        <div class="esc-level-body">
+          <div class="esc-contact"><span class="role">Standard Claims L1</span><div class="f"><span class="k">Name</span><span class="v">Shubham Sehgal</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9355827180">9355827180</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:shubhamsehgal@policybazaar.com">shubhamsehgal@policybazaar.com</a></span></div></div>
+          <div class="esc-contact"><span class="role">Standard Claims L2</span><div class="f"><span class="k">Name</span><span class="v">Rohit Singh</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9667228995">9667228995</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:rohitsingh@policybazaar.com">rohitsingh@policybazaar.com</a></span></div></div>
+          <div class="esc-contact"><span class="role">Cashless Claims L1 / Team Contact</span><div class="f"><span class="k">Name</span><span class="v">Nalin Shekhar</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9355847496">9355847496</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:cashlessclaims@policybazaar.com">cashlessclaims@policybazaar.com</a></span></div></div>
+          <div class="esc-contact"><span class="role">Cashless Claims L2</span><div class="f"><span class="k">Name</span><span class="v">Vijay Pratap Singh</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:7669180320">7669180320</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:vijaypratap@policybazaar.com">vijaypratap@policybazaar.com</a></span></div></div>
+          <div class="esc-contact"><span class="role">Reimbursement SPOC</span><div class="f"><span class="k">Name</span><span class="v">Muskan Mishra</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9355827180">9355827180</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:muskanmishra@policybazaar.com">muskanmishra@policybazaar.com</a></span></div></div>
+          <div class="esc-contact"><span class="role">Servicing / Operations POC</span><div class="f"><span class="k">Name</span><span class="v">Chetan Sharma</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8448590822">8448590822</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:Chetansharmal@policybazaar.com">Chetansharmal@policybazaar.com</a></span></div></div>
+        </div>
+      </details></div>
+      <div class="lvl"><details class="esc-level">
+        <summary>Claims &amp; Servicing — Escalation Levels</summary>
+        <div class="esc-level-body">
+          <div class="esc-contact"><span class="role">Level 1</span><div class="f"><span class="k">Name</span><span class="v">Vishal Tripathi</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9667399004">9667399004</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:Vishaltriphati@policybazaar.com">Vishaltriphati@policybazaar.com</a></span></div></div>
+          <div class="esc-contact"><span class="role">Level 2</span><div class="f"><span class="k">Name</span><span class="v">Umesh Singh</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8448590822">8448590822</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:umeshsingh@policybazaar.com">umeshsingh@policybazaar.com</a></span></div></div>
+          <div class="esc-contact"><span class="role">Level 3</span><div class="f"><span class="k">Name</span><span class="v">Naveen Kumar</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9625356360">9625356360</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:naveen.k@policybazaar.com">naveen.k@policybazaar.com</a></span></div></div>
+          <div class="esc-contact"><span class="role">Level 4</span><div class="f"><span class="k">Name</span><span class="v">Dhruv Shandil</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:7760205119">7760205119</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:dhruvshandil@policybazaar.com">dhruvshandil@policybazaar.com</a></span></div></div>
+        </div>
+      </details></div>
+    </div>
+    <div class="tab-panel" id="gmc-3">
+      <div class="subtabs">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="showTab(this,'cf-cashless')">Cashless</button>
+          <button class="tab-btn" onclick="showTab(this,'cf-reimb')">Reimbursement</button>
+        </div>
+        <div class="tab-panel active" id="cf-cashless">
+          <p class="steps lead">Pre-authorisation request form for cashless hospitalisation (Niva Bupa).</p>
+          <div class="actions"><a class="btn primary" href="https://drive.google.com/file/d/1SxXfyoxJg8BPsj3IQ70Jg5r2wIAIyqTD/view?usp=drive_link" target="_blank">Open Cashless Form</a></div>
+        </div>
+        <div class="tab-panel" id="cf-reimb">
+          <p class="steps lead">Claim form for reimbursement of health insurance claims (Niva Bupa).</p>
+          <div class="actions"><a class="btn primary" href="https://drive.google.com/file/d/131jAs--6feEHhxpQk2dPuT8LWE5ky-P7/view?usp=drive_link" target="_blank">Open Reimbursement Form</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel" id="gmc-4">
+      <div class="care">
+        <h3>We are here to help you, and to hear you out.</h3>
+        <p>Some days are harder than others. Whatever is on your mind, whether it is work, family or just a heavy week, you do not have to carry it alone. Reaching out is a sign of strength, and support is only a click away.</p>
+        <div class="actions"><a class="btn primary" href="https://secure.silveroakhealth.com/app" target="_blank">Open EAP Portal</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. SALES RELATED ISSUES -->
+<div class="section" id="sec-sales-support">
+  <div class="section-head">
+    <div class="icon">📈</div><div class="sh-t"><h2>Sales Support</h2><p>Apps, dashboards and support contacts</p></div>
+  </div>
+  <div class="section-body">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab(this,'sales-4')">PBP-RM App</button>
+      <button class="tab-btn" onclick="showTab(this,'sales-6')">Victory Dashboard</button>
+      <button class="tab-btn" onclick="showTab(this,'sales-7')">Contact &amp; Escalation Matrix</button>
+      <button class="tab-btn" onclick="showTab(this,'sales-1')">Incentive Calculator</button>
+    </div>
+    <div class="tab-panel" id="sales-7">
+      <div class="subtabs">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="showTab(this,'sup-mot')">Motor Support</button>
+          <button class="tab-btn" onclick="showTab(this,'sup-hea')">Health Support</button>
+          <button class="tab-btn" onclick="showTab(this,'sup-lif')">Life Support</button>
+          <button class="tab-btn" onclick="showTab(this,'sup-com')">Commercial Line</button>
+        </div>
+      <div class="tab-panel active" id="sup-mot">
+        <h4 class="sub-h">Claims – Motor</h4><h5 class="sub-h2">SPOC (all insurers)</h5><div class="cgrid"><div class="esc-contact"><span class="role">SPOC – Claim Intimation &amp; Claim Query for Partners</span><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:1800120800">1800120800</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:motorclaim@pbpartners.com">motorclaim@pbpartners.com</a></span></div></div></div><h5 class="sub-h2">Escalation 1 by insurer</h5><div class="cgrid"><div class="esc-contact"><span class="role">Escalation 1 – United India</span><div class="f"><span class="k">Name</span><span class="v">Komal Kataria</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9999172679">9999172679</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:Komalkataria@pbpartners.com">Komalkataria@pbpartners.com</a></span></div></div><div class="esc-contact"><span class="role">Escalation 1 – Oriental</span><div class="f"><span class="k">Name</span><span class="v">Bhawna</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9953322480">9953322480</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:bhawna1@pbpartners.com">bhawna1@pbpartners.com</a></span></div></div><div class="esc-contact"><span class="role">Escalation 1 – National &amp; New India</span><div class="f"><span class="k">Name</span><span class="v">Madhav Batra</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:7015896183">7015896183</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:madhavbatra@pbpartners.com">madhavbatra@pbpartners.com</a></span></div></div><div class="esc-contact"><span class="role">Escalation 1 – Private Insurer</span><div class="f"><span class="k">Name</span><span class="v">Deepak Kumar</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8295183069">8295183069</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:deepakkumar10@pbpartners.com">deepakkumar10@pbpartners.com</a></span></div></div><div class="esc-contact"><span class="role">Escalation 1 – Private Insurer</span><div class="f"><span class="k">Name</span><span class="v">Nilendra Singh Rathod</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:6260322865">6260322865</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:nilendrarathod@pbpartners.com">nilendrarathod@pbpartners.com</a></span></div></div></div><h5 class="sub-h2">Escalation 2–4 (United India, Oriental, National &amp; New India)</h5><div class="cgrid"><div class="esc-contact"><span class="role">Escalation 2</span><div class="f"><span class="k">Name</span><span class="v">Raju Rawat</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9355899893">9355899893</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:Rajurawat@pbpartners.com">Rajurawat@pbpartners.com</a></span></div></div><div class="esc-contact"><span class="role">Escalation 3</span><div class="f"><span class="k">Name</span><span class="v">Deepak Kankaria</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:6267827138">6267827138</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:deepakkankaria@pbpartners.com">deepakkankaria@pbpartners.com</a></span></div></div><div class="esc-contact"><span class="role">Escalation 4</span><div class="f"><span class="k">Name</span><span class="v">Puneet Shukla</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9930402117">9930402117</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:puneetshukla@pbpartners.com">puneetshukla@pbpartners.com</a></span></div></div></div><h5 class="sub-h2">Escalation 2–3 (Private Insurer)</h5><div class="cgrid"><div class="esc-contact"><span class="role">Escalation 2</span><div class="f"><span class="k">Name</span><span class="v">Girish Yadav</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8448524072">8448524072</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:girishyadav@pbpartners.com">girishyadav@pbpartners.com</a></span></div></div><div class="esc-contact"><span class="role">Escalation 3</span><div class="f"><span class="k">Name</span><span class="v">Deepak Kankaria</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:6267827138">6267827138</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:deepakkankaria@pbpartners.com">deepakkankaria@pbpartners.com</a></span></div></div></div>
+      </div>
+      <div class="tab-panel" id="sup-hea">
+        <h4 class="sub-h">Health – Claims / Ops</h4><div class="cgrid"><div class="esc-contact"><span class="role">SPOC (DL)</span><div class="f"><span class="k">Name</span><span class="v">Health Support DL</span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:healthsupport@pbpartners.com">healthsupport@pbpartners.com</a></span></div></div><div class="esc-contact"><span class="role">Escalation 1</span><div class="f"><span class="k">Name</span><span class="v">Diksha Rawat</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8826130665">8826130665</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:diksharawat@pbpartners.com">diksharawat@pbpartners.com</a></span></div></div><div class="esc-contact"><span class="role">Escalation 2</span><div class="f"><span class="k">Name</span><span class="v">Seema Sen</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9818112298">9818112298</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:seemasen@pbpartners.com">seemasen@pbpartners.com</a></span></div></div><div class="esc-contact"><span class="role">Escalation 3</span><div class="f"><span class="k">Name</span><span class="v">Puneet Shukla</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9930402117">9930402117</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:puneetshukla@pbpartners.com">puneetshukla@pbpartners.com</a></span></div></div></div>
+      </div>
+      <div class="tab-panel" id="sup-lif">
+        <h4 class="sub-h">Life – Endorsements, Claims and Issuance</h4><h5 class="sub-h2">SPOC by insurer</h5><div class="cgrid"><div class="esc-contact"><span class="role">Bandhan Life, CANARA HSBC, ICICI PRU, KOTAK, Pramerica, SBI, Shriram Life, Star Union (SUD)</span><div class="f"><span class="k">Name</span><span class="v">Ashish Singh</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9628970010">9628970010</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:ashishsingh2@pbpartners.com">ashishsingh2@pbpartners.com</a></span></div></div><div class="esc-contact"><span class="role">HDFC, BHARTI, Edelweiss, India First, LIC, PNB</span><div class="f"><span class="k">Name</span><span class="v">Manjana Rani Choudhary</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8085394144">8085394144</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:manjanachoudhary@pbpartners.com">manjanachoudhary@pbpartners.com</a></span></div></div><div class="esc-contact"><span class="role">MAX, TATA AIA – East, West zone</span><div class="f"><span class="k">Name</span><span class="v">Rajesh Kumar</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8587893741">8587893741</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:rajeshkumar@pbpartners.com">rajeshkumar@pbpartners.com</a></span></div></div><div class="esc-contact"><span class="role">Bajaj</span><div class="f"><span class="k">Name</span><span class="v">Seema Sheikh</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9971362908">9971362908</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:seemasheikh@pbpartners.com">seemasheikh@pbpartners.com</a></span></div></div><div class="esc-contact"><span class="role">TATA AIA – North, West Zone, ADITYA BIRLA, Digit Life</span><div class="f"><span class="k">Name</span><span class="v">Usha Yadav</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9519845717">9519845717</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:ushayadav@pbpartners.com">ushayadav@pbpartners.com</a></span></div></div></div><h5 class="sub-h2">Escalation (same for all insurers)</h5><div class="cgrid"><div class="esc-contact"><span class="role">Escalation 1</span><div class="f"><span class="k">Name</span><span class="v">Uttam Anand Shrivastava</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9696845050">9696845050</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:uttamshrivastava@pbpartners.com">uttamshrivastava@pbpartners.com</a></span></div></div><div class="esc-contact"><span class="role">Escalation 2</span><div class="f"><span class="k">Name</span><span class="v">Takshita Khatri</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8920702234">8920702234</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:Takshitak@pbpartners.com">Takshitak@pbpartners.com</a></span></div></div><div class="esc-contact"><span class="role">Escalation 3</span><div class="f"><span class="k">Name</span><span class="v">Shahab Mohd Khan</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8377880436">8377880436</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:shahabkhan@policybazaar.com">shahabkhan@policybazaar.com</a></span></div></div></div>
+      </div>
+      <div class="tab-panel" id="sup-com">
+        <h4 class="sub-h">Commercial Line (CL)</h4><h5 class="sub-h2">Endorsement</h5><div class="cgrid"><div class="esc-contact"><span class="role">Escalation 1</span><div class="f"><span class="k">Name</span><span class="v">Nidhi Kushwaha</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9355899891">9355899891</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:corpendorsement@pbpartners.com">corpendorsement@pbpartners.com</a></span></div></div><div class="esc-contact"><span class="role">Escalation 2</span><div class="f"><span class="k">Name</span><span class="v">Monika Sharma</span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:Monikasharma@policybazaar.com">Monikasharma@policybazaar.com</a></span></div></div></div><h5 class="sub-h2">Claim Servicing</h5><div class="cgrid"><div class="esc-contact"><span class="role">Escalation 1</span><div class="f"><span class="k">Name</span><span class="v">Amir Saifi</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9355899890">9355899890</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:corpclaims@pbpartners.com">corpclaims@pbpartners.com</a></span></div></div><div class="esc-contact"><span class="role">Escalation 2</span><div class="f"><span class="k">Name</span><span class="v">Monika Sharma</span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:Monikasharma@policybazaar.com">Monikasharma@policybazaar.com</a></span></div></div></div>
+      </div>
+      </div>
+    </div>
+    <div class="tab-panel" id="sales-1">
+      <p class="steps lead">Use the incentive calculator to estimate your payout based on target achievement.</p>
+      <div class="actions">
+        <a class="btn primary" href="https://datastudio.google.com/reporting/9139705a-92bb-411b-aa6a-25a1a9004259/page/p_p7ma1oeu6d" target="_blank">Motor</a>
+        <a class="btn primary" href="https://datastudio.google.com/reporting/3fc2546a-5bb8-43fc-b232-65b5bdd0dbbd/page/p_a1kbwmh12d" target="_blank">Health</a>
+        <a class="btn primary" href="https://datastudio.google.com/reporting/6d8d61bf-c4f1-460b-bcf3-3147aff72712/page/p_pi24sequ2d" target="_blank">Life</a>
+        <a class="btn primary" href="https://datastudio.google.com/reporting/f895af41-f683-486c-a103-f959690cb731/page/XDTVF" target="_blank">Commercial Line</a>
+      </div>
+    </div>
+    <div class="tab-panel active" id="sales-4">
+      <p class="steps lead">Download the PBP-RM app on your phone.</p>
+      <div class="actions">
+        <a class="btn primary" href="https://play.google.com/store/apps/details?id=com.pbpartners.consumer&hl=en_IN" target="_blank">Google Play Store (Android)</a>
+        <a class="btn primary" href="https://apps.apple.com/in/app/pbpartners/id1622463975" target="_blank">App Store (iOS)</a>
+      </div>
+      <div class="cgrid" style="margin-top:16px;">
+        <div class="esc-contact"><span class="role">RM App Support</span><div class="f"><span class="k">Name</span><span class="v">Riya Verma</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8448983911">8448983911</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:riyaverma@pbpartners.com">riyaverma@pbpartners.com</a></span></div></div>
+      </div>
+    </div>
+    <div class="tab-panel" id="sales-6">
+      <p class="steps lead">Open the Victory Dashboard for your vertical.</p>
+      <div class="actions">
+        <a class="btn primary" href="https://datastudio.google.com/reporting/79704da9-4c08-4ed9-bf64-a42fbbb57b6d/page/page_12345" target="_blank">Motor</a>
+        <a class="btn primary" href="https://datastudio.google.com/reporting/837cee14-a401-432d-9243-b693a4dd35ac/page/page_12345" target="_blank">Health</a>
+        <a class="btn primary" href="https://datastudio.google.com/reporting/5081f1dc-922c-4e3f-835b-e1f34c17686b/page/page_12345" target="_blank">Life</a>
+        <a class="btn primary" href="https://datastudio.google.com/reporting/61984c08-feb3-4130-bead-7cde50e8ed7e/page/page_12345" target="_blank">Commercial Line</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. HR HELPDESK -->
+<div class="section" id="sec-hr-helpdesk">
+  <div class="section-head">
+    <div class="icon">🙋</div><div class="sh-t"><h2>HR Helpdesk</h2><p>Escalation matrix and HR policy</p></div>
+  </div>
+  <div class="section-body">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab(this,'hr-1')">Escalation Matrix</button>
+      <button class="tab-btn" onclick="showTab(this,'hr-3')">HR Policy</button>
+      <button class="tab-btn" onclick="showTab(this,'hr-5')">PMS</button>
+    </div>
+    <div class="tab-panel active" id="hr-1">
+      <div class="lvl"><details class="esc-level" open>
+        <summary>Level 1</summary>
+        <div class="esc-level-body">
+          <details class="reg-dd" name="hr-l1-region">
+            <summary>West Region</summary>
+            <div class="reg-body">
+            <div class="esc-contact"><span class="role">Motor Vertical (Maharashtra)</span><div class="f"><span class="k">Name</span><span class="v">Yuvraj Kumar</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:6202715464">6202715464</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:yuvrajkumar1@pbpartners.com">yuvrajkumar1@pbpartners.com</a></span></div></div>
+            <div class="esc-contact"><span class="role">Motor Vertical (Gujarat)</span><div class="f"><span class="k">Name</span><span class="v">Shweta Bhaisare</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9665594259">9665594259</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:shwetasadashiv@pbpartners.com">shwetasadashiv@pbpartners.com</a></span></div></div>
+            <div class="esc-contact"><span class="role">Life Vertical</span><div class="f"><span class="k">Name</span><span class="v">Kritika Upadhyay</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9022442166">9022442166</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:kritikaupadhyay@pbpartners.com">kritikaupadhyay@pbpartners.com</a></span></div></div>
+            <div class="esc-contact"><span class="role">Health &amp; CL Vertical</span><div class="f"><span class="k">Name</span><span class="v">Aashif Mansuri</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9650926191">9650926191</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:aashifmansuri@pbpartners.com">aashifmansuri@pbpartners.com</a></span></div></div>
+            </div>
+          </details>
+          <details class="reg-dd" name="hr-l1-region">
+            <summary>North Region</summary>
+            <div class="reg-body">
+            <div class="esc-contact"><span class="role">POSP-MOTOR Retail &amp; Dealership (Haryana / Punjab / J&amp;K / Himachal / Delhi NCR)</span><div class="f"><span class="k">Name</span><span class="v">Gurpreet Singh</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:6289075155">6289075155</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:gurpreetsingh9@pbpartners.com">gurpreetsingh9@pbpartners.com</a></span></div></div>
+            <div class="esc-contact"><span class="role">POSP-MOTOR Retail (Rajasthan) / POSP-Dealership (UP &amp; Haryana)</span><div class="f"><span class="k">Name</span><span class="v">Mahima Gupta</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:7976510437">7976510437</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:mahimagupta@pbpartners.com">mahimagupta@pbpartners.com</a></span></div></div>
+            <div class="esc-contact"><span class="role">POSP-Life</span><div class="f"><span class="k">Name</span><span class="v">Gaurang Chauhan</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:7976037847">7976037847</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:gaurangchauhan@pbpartners.com">gaurangchauhan@pbpartners.com</a></span></div></div>
+            <div class="esc-contact"><span class="role">POSP-MOTOR (Delhi NCR &amp; UP)</span><div class="f"><span class="k">Name</span><span class="v">Tushar Bhatt</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8178559299">8178559299</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:tusharbhatt@pbpartners.com">tusharbhatt@pbpartners.com</a></span></div></div>
+            <div class="esc-contact"><span class="role">POSP-Health / POSP-Commercial Line</span><div class="f"><span class="k">Name</span><span class="v">Vikash Kumar</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:7827017984">7827017984</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:vikashkumar14@pbpartners.com">vikashkumar14@pbpartners.com</a></span></div></div>
+            </div>
+          </details>
+          <details class="reg-dd" name="hr-l1-region">
+            <summary>South Region</summary>
+            <div class="reg-body">
+              <div class="esc-contact"><span class="role">POSP - Life &amp; Health</span><div class="f"><span class="k">Name</span><span class="v">Rakesh B</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9283792409">9283792409</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:rakeshb@pbpartners.com">rakeshb@pbpartners.com</a></span></div></div>
+              <div class="esc-contact"><span class="role">POSP - Health, Motor &amp; CL</span><div class="f"><span class="k">Name</span><span class="v">Kartik Sharma</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8989584063">8989584063</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:kartiksharma2@pbpartners.com">kartiksharma2@pbpartners.com</a></span></div></div>
+              <div class="esc-contact"><span class="role">POSP - Motor (TN &amp; KL), CL</span><div class="f"><span class="k">Name</span><span class="v">Pranav V J</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:7034152929">7034152929</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:pranavjayakumaran@pbpartners.com">pranavjayakumaran@pbpartners.com</a></span></div></div>
+              <div class="esc-contact"><span class="role">SAP 2.0</span><div class="f"><span class="k">Name</span><span class="v">Shaik Akram Javid</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8978550967">8978550967</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:akramjavid@pbpartners.com">akramjavid@pbpartners.com</a></span></div></div>
+              <div class="esc-contact"><span class="role">POSP - Motor (AP &amp; TS), Motor Dealership</span><div class="f"><span class="k">Name</span><span class="v">K R Yogesh</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8098090290">8098090290</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:yogeshramachandran@pbpartners.com">yogeshramachandran@pbpartners.com</a></span></div></div>
+              <div class="esc-contact"><span class="role">POSP - Motor (Karnataka)</span><div class="f"><span class="k">Name</span><span class="v">Pothina Gowtham</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:7330066315">7330066315</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:gowthampothina@pbpartners.com">gowthampothina@pbpartners.com</a></span></div></div>
+            </div>
+          </details>
+          <details class="reg-dd" name="hr-l1-region">
+            <summary>East Region</summary>
+            <div class="reg-body">
+              <div class="esc-contact"><span class="role">Health &amp; Life</span><div class="f"><span class="k">Name</span><span class="v">Ravi Nath Thakur</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9883726086">9883726086</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:ravithakur@pbpartners.com">ravithakur@pbpartners.com</a></span></div></div>
+              <div class="esc-contact"><span class="role">Motor &amp; Motor Dealership</span><div class="f"><span class="k">Name</span><span class="v">Ritika Singh</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9304264646">9304264646</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:ritikasingh2@pbpartners.com">ritikasingh2@pbpartners.com</a></span></div></div>
+              <div class="esc-contact"><span class="role">Motor &amp; Motor Dealership</span><div class="f"><span class="k">Name</span><span class="v">Rohan Deshraj Kujur</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:6205361928">6205361928</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:rohankujur@pbpartners.com">rohankujur@pbpartners.com</a></span></div></div>
+            </div>
+          </details>
+        </div>
+      </details></div>
+      <div class="lvl"><details class="esc-level">
+        <summary>Level 2</summary>
+        <div class="esc-level-body">
+          <div class="esc-contact"><span class="role">West Region</span><div class="f"><span class="k">Name</span><span class="v">Yash Mehta</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9595255678">9595255678</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:yashmehta@pbpartners.com">yashmehta@pbpartners.com</a></span></div></div>
+          <div class="esc-contact"><span class="role">North Region</span><div class="f"><span class="k">Name</span><span class="v">Punarnava Sharma</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8826628898">8826628898</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:punarnavasharma@pbpartners.com">punarnavasharma@pbpartners.com</a></span></div></div>
+          <div class="esc-contact"><span class="role">South Region</span><div class="f"><span class="k">Name</span><span class="v">Kumar Bhaskar</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8148642592">8148642592</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:kumarbaskar@pbpartners.com">kumarbaskar@pbpartners.com</a></span></div></div>
+          <div class="esc-contact"><span class="role">East Region</span><div class="f"><span class="k">Name</span><span class="v">Soumyadeep Ghatak</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:9330570084">9330570084</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:soumyadeepghatak@pbpartners.com">soumyadeepghatak@pbpartners.com</a></span></div></div>
+        </div>
+      </details></div>
+      <div class="lvl"><details class="esc-level">
+        <summary>Level 3</summary>
+        <div class="esc-level-body">
+          <div class="esc-contact"><span class="role">All Zones</span><div class="f"><span class="k">Name</span><span class="v">Rajan Gulati</span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:rajang@policybazaar.com">rajang@policybazaar.com</a></span></div></div>
+        </div>
+      </details></div>
+    </div>
+    <div class="tab-panel" id="hr-3">
+      <p class="steps lead">Find HR policies and policy forms on PB Connect.</p>
+      <div class="steps-box">
+        <ol class="steps">
+          <li>Click the HR Policy button below to open PB Connect.</li>
+          <li>Click on <b>Forms and Policies</b>.</li>
+        </ol>
+      </div>
+      <div class="actions"><a class="btn primary" href="https://pbconnect.policybazaar.com/content-detail/hrclick/policyforms" target="_blank">HR Policy</a></div>
+    </div>
+    <div class="tab-panel" id="hr-5">
+      <p class="steps lead">Open the PMS document using the button below.</p>
+      <div class="actions"><a class="btn primary" href="https://docs.google.com/document/d/1XEwnMSnBJw5FF2GwnsZP8O1jHHGLtx9aq4m8UyV9a1E/edit?usp=sharing" target="_blank">Open PMS Document</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- 6. EMPLOYEE BENEFITS -->
+<div class="section" id="sec-employee-benefits">
+  <div class="section-head">
+    <div class="icon">🎁</div><div class="sh-t"><h2>Employee Benefits</h2><p>Benefits info and Employee Club</p></div>
+  </div>
+  <div class="section-body">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab(this,'eb-1')">General Benefits Info</button>
+      <button class="tab-btn" onclick="showTab(this,'eb-2')">Employee Club</button>
+    </div>
+    <div class="tab-panel active" id="eb-1">
+      <div class="bn-grid"><div class="bn-card"><h3>Tenure-Wise Benefits</h3><div class="bn-body"><div class="bn-grp"><h4>1–2 Years</h4><ul><li><b>Salary Advance Loan:</b> For medical emergencies; up to ₹1 lakh or 2 months' fixed gross salary</li><li><b>Education Reimbursement:</b> Up to ₹2 lakh for eligible courses; includes up to 10% for study materials</li><li><b>Internal Job Promotion (IJP):</b> Eligible after 9 months of continuous service</li><li><b>Samvardhan Program:</b> Identified for succession planning and leadership pipeline</li></ul></div><div class="bn-grp"><h4>2–4 Years</h4><ul><li><b>Increased Education Support:</b> Up to ₹3 lakh reimbursement depending on course duration</li><li><b>Salary Advance Loan:</b> 3-month fixed gross salary or ₹1 lakh, whichever is lesser</li></ul></div><div class="bn-grp"><h4>4+ Years</h4><ul><li><b>Education Reimbursement:</b> Up to ₹4 lakh plus 10% for study materials</li></ul></div></div></div><div class="bn-card"><h3>Level-Wise Benefits</h3><div class="bn-body"><div class="bn-grp"><h4>Below Manager</h4><ul><li><b>Mobile Reimbursement:</b> Case-based</li><li><b>Car Lease (Team Leader &amp; above):</b> After 1 year; lease up to ₹3.5 lakh or 45% of fixed CTC</li></ul></div><div class="bn-grp"><h4>Manager / Sr. Manager</h4><ul><li><b>Mobile Handset:</b> Reimbursed up to ₹20,000</li><li><b>Mobile Bill:</b> Up to ₹1,000/month</li><li><b>Car Lease:</b> After 6 months; lease up to 60% of fixed CTC</li></ul></div><div class="bn-grp"><h4>AVP to EVP</h4><ul><li><b>Mobile Handset:</b> Reimbursed up to ₹40,000</li><li><b>Mobile Bill:</b> Up to ₹1,000/month</li><li><b>Car Lease:</b> Same as above, up to 60% of fixed CTC</li></ul></div><div class="bn-grp"><h4>AD &amp; Above</h4><ul><li><b>Mobile &amp; Bills:</b> As per actuals</li><li><b>Car Lease:</b> Same as above, up to 60% of fixed CTC</li></ul></div></div></div><div class="bn-card"><h3>Common Benefits</h3><div class="bn-body"><div class="bn-grp"><h4>Insurance &amp; Health Coverage</h4><ul><li>Group Personal Accident (GPA)</li><li>Group Mediclaim (GMC)</li><li>Voluntary Top-Up Policy</li><li>Parental Top-Up Policy</li><li>ESIC (Employee State Insurance Corporation)</li></ul></div><div class="bn-grp"><h4>Financial &amp; Retirement Benefits</h4><ul><li>Voluntary Provident Fund (VPF)</li><li>National Pension Scheme (NPS)</li><li>Flexi Benefit Plan</li></ul></div><div class="bn-grp"><h4>Family &amp; Parental Support</h4><ul><li>Maternity Leave</li><li>Paternity Leave</li><li>Crèche Facility</li></ul></div><div class="bn-grp"><h4>Employee Well-being &amp; Engagement</h4><ul><li>Employee Assistance Program (EAP)</li><li>Advantage Club</li></ul></div><div class="bn-grp"><h4>Performance &amp; Productivity Tools</h4><ul><li>PT Dashboard</li><li>Incentive Dashboard</li></ul></div></div></div></div>
+    </div>
+    <div class="tab-panel" id="eb-2">
+      <div class="actions"><a class="btn primary" href="https://docs.google.com/presentation/d/1e7H4s-sHhWpmbuOIydQJ2WTGAY02MG9y/edit?usp=drive_link&ouid=108181228430405730551&rtpof=true&sd=true" target="_blank">View: Employee Club (Guide)</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- 7. TRAVEL AND EC GRIEVANCES -->
+<div class="section" id="sec-travel-ec">
+  <div class="section-head">
+    <div class="icon">✈️</div><div class="sh-t"><h2>Travel Portal &amp; EC Grievances</h2><p>Travel requests and EC grievances</p></div>
+  </div>
+  <div class="section-body">
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab(this,'tr-1')">Travel</button>
+      <button class="tab-btn" onclick="showTab(this,'tr-2')">EC Grievances</button>
+    </div>
+    <div class="tab-panel active" id="tr-1">
+      <p class="steps lead">Raise your travel &amp; accommodation request here.</p>
+      <div class="note"><b>Booking rule:</b> Bookings raised with less than 7 days' notice will still be accepted, but flagged as non-compliant.</div>
+      <div class="actions" style="margin-bottom:16px;">
+        <a class="btn primary" href="https://script.google.com/a/macros/pbpartners.com/s/AKfycbyEHwkLdEmJjzcLgY0eHg7vzHIDSF87y3ZCMrCvurRwfzmpO1ZjTWUkvQr8deBJJBrQ_w/exec" target="_blank">Open Travel Form</a>
+      </div>
+      <div class="cgrid">
+        <div class="esc-contact"><span class="role">Contact</span><div class="f"><span class="k">Name</span><span class="v">Travel Desk</span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:traveldesk@pbpartners.com">traveldesk@pbpartners.com</a></span></div></div>
+        <div class="esc-contact"><span class="role">L1 Escalation</span><div class="f"><span class="k">Name</span><span class="v">Naveen Kumar</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:8130770847">8130770847</a></span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:naveenkumar17@pbpartners.com">naveenkumar17@pbpartners.com</a></span></div></div>
+        <div class="esc-contact"><span class="role">L2 Escalation</span><div class="f"><span class="k">Name</span><span class="v">Karan Seth</span></div><div class="f"><span class="k">Email ID</span><span class="v"><a href="mailto:karanseth@pbpartners.com">karanseth@pbpartners.com</a></span></div></div>
+      </div>
+    </div>
+    <div class="tab-panel" id="tr-2">
+      <p class="steps lead">Raise your EC grievance through the portal.</p>
+      <div class="actions">
+        <a class="btn primary" href="https://script.google.com/a/macros/pbpartners.com/s/AKfycbyD6DMvCPrEOLnUYn9amjkhZBl4uE6g_QHM10Jx2mL8i6U_XASDQGOMHQyVGpVfiugEog/exec" target="_blank">Open EC Grievances Portal</a>
+      </div>
+      <div class="cgrid" style="margin-top:16px;">
+        <div class="esc-contact"><span class="role">EC Grievances</span><div class="f"><span class="k">Name</span><span class="v">Janaki</span></div><div class="f"><span class="k">Contact Number</span><span class="v"><a href="tel:7729931195">7729931195</a></span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+var SECS=['payroll','it-help-desk','mediclaim','sales-support','hr-helpdesk','employee-benefits','travel-ec'];
+var curSec=null;
+function reducedMotion(){ return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+function showSection(id, scroll){
+  var idx=SECS.indexOf(id); if(idx<0){ idx=0; id=SECS[0]; }
+  curSec=id;
+  document.querySelectorAll('.section').forEach(function(sec,i){ sec.classList.toggle('open', i===idx); });
+  var nav=document.querySelector('.appnav'), act=null;
+  document.querySelectorAll('.nav-item').forEach(function(b,i){
+    var on=(i===idx); b.classList.toggle('active',on); if(on){ act=b; }
+    if(on){ b.setAttribute('aria-current','page'); } else { b.removeAttribute('aria-current'); }
+  });
+  try{ if(location.hash!=='#'+id){ location.hash=id; } }catch(e){}
+  if(nav && act && nav.scrollWidth>nav.clientWidth+2 && nav.scrollHeight<=nav.clientHeight+2){
+    try{ nav.scrollTo({left: act.offsetLeft-(nav.clientWidth-act.offsetWidth)/2, behavior: reducedMotion()?'auto':'smooth'}); }catch(e){}
+  }
+  if(scroll){
+    var app=document.querySelector('.app');
+    var top=app.getBoundingClientRect().top+window.pageYOffset-8;
+    if(window.pageYOffset>top){ window.scrollTo({top:top, behavior: reducedMotion()?'auto':'smooth'}); }
+  }
+}
+document.querySelectorAll('.nav-item').forEach(function(b){
+  b.addEventListener('click',function(){ showSection(b.getAttribute('data-sec'), true); });
+});
+window.addEventListener('hashchange',function(){
+  var h=location.hash.replace('#','');
+  if(h && h!==curSec){ showSection(h,false); }
+});
+function showTab(btn, panelId){
+  var tabsRow = btn.parentElement;
+  var body = tabsRow.parentElement;
+  tabsRow.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  body.querySelectorAll(':scope > .tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+}
+showSection(location.hash.replace('#','') || SECS[0], false);
+
+/* initials badge on contact cards that have a person's name */
+document.querySelectorAll('.esc-contact').forEach(function(c){
+  var role=c.querySelector('.role'), nameEl=null;
+  c.querySelectorAll('.f').forEach(function(f){
+    var k=f.querySelector('.k'); if(k && /^Name/.test(k.textContent)){ nameEl=f.querySelector('.v'); }
+  });
+  if(!role || !nameEl){ return; }
+  var t=nameEl.textContent.replace(/\(.*?\)/g,'').replace(/\[.*?\]/g,'').trim();
+  if(!t || t.length>26 || /&/.test(t)){ return; }
+  var ini=t.split(/\s+/).slice(0,2).map(function(w){ return w.charAt(0); }).join('').toUpperCase();
+  var head=document.createElement('div'); head.className='chead';
+  var av=document.createElement('span'); av.className='av'; av.setAttribute('aria-hidden','true'); av.textContent=ini;
+  c.insertBefore(head,role); head.appendChild(av); head.appendChild(role);
+});
+
+</script>
 </body>
 </html>
