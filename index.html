@@ -455,6 +455,49 @@ main{min-width:0;}
   .netmap .hubpulse{display:none;}
   ::view-transition-new(root){animation:none;}
 }
+
+/* =====================  v3: hub interchange fx  ===================== */
+.netmap .hubfx *,.netmap .hubcore *{transform-box:view-box;transform-origin:320px 200px;}
+.netmap .hubdisc{fill:var(--ground);stroke:rgba(255,255,255,.06);stroke-width:1;}
+.netmap .dashring{fill:none;stroke:rgba(255,255,255,.35);stroke-width:2;stroke-dasharray:2 9;stroke-linecap:round;animation:spin 26s linear infinite reverse;}
+.netmap .arcs{animation:spin 14s linear infinite;}
+.netmap .arc{fill:none;stroke-width:7;stroke-linecap:round;opacity:.55;transition:stroke-width .5s var(--ease),opacity .5s var(--ease);}
+.netmap .arc.on{stroke-width:12;opacity:1;filter:drop-shadow(0 0 6px currentColor);}
+.netmap .hubpulse{stroke:var(--cur);stroke-width:3;animation:hub 2.4s var(--ease) infinite;}
+.netmap .hubpulse.p2{animation-delay:1.2s;}
+@keyframes hub{0%{transform:scale(1);opacity:.85;}100%{transform:scale(2.4);opacity:0;}}
+.netmap .rays line{stroke:var(--cur);stroke-width:2;stroke-dasharray:3 10;opacity:.0;}
+.netmap .rays{animation:spin 40s linear infinite;}
+.netmap .orbit{animation:spin 6s linear infinite;}
+.netmap .orbit circle{fill:var(--cur);filter:drop-shadow(0 0 4px var(--cur));}
+.netmap .o2{animation-duration:9s;animation-direction:reverse;}
+.netmap .o2 circle{fill:#fff;}
+.netmap .o3{animation-duration:4.2s;animation-delay:-1s;}
+.netmap .shock{fill:none;stroke:var(--cur);stroke-width:6;opacity:0;}
+.netmap .spark{opacity:0;}
+.netmap .hubring{fill:var(--ground);stroke:#fff;stroke-width:6;}
+.netmap .hubcore{cursor:pointer;}
+.netmap .hubcore:hover .hublogo{animation:wob .6s var(--ease);}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes wob{30%{transform:scale(1.12) rotate(-8deg);}60%{transform:scale(.96) rotate(5deg);}}
+/* burst on every line change */
+.netmap.burst .arcs-in{animation:whirl 1s cubic-bezier(.2,.8,.2,1);}
+@keyframes whirl{from{transform:rotate(-540deg) scale(.6);}60%{transform:scale(1.12);}to{transform:rotate(0) scale(1);}}
+.netmap.burst .shock{animation:shock .9s cubic-bezier(.2,.8,.2,1);}
+@keyframes shock{0%{opacity:1;transform:scale(1);stroke-width:10;}100%{opacity:0;transform:scale(3.2);stroke-width:1;}}
+.netmap.burst .spark{animation:spark .9s cubic-bezier(.15,.85,.25,1);}
+@keyframes spark{0%{opacity:1;transform:translate(0,0) scale(1.4);}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.4);}}
+.netmap.burst .hublogo{animation:logospin .95s cubic-bezier(.3,1.5,.4,1);}
+@keyframes logospin{0%{transform:scale(1) rotate(0);}35%{transform:scale(.72) rotate(200deg);}100%{transform:scale(1) rotate(360deg);}}
+.netmap.burst .rays line{animation:rays 1s ease-out;}
+@keyframes rays{0%{opacity:.9;}100%{opacity:0;}}
+.netmap.burst .hubring{animation:ringflash .9s ease-out;}
+@keyframes ringflash{0%{stroke:var(--cur);stroke-width:12;}100%{stroke:#fff;stroke-width:6;}}
+@media (prefers-reduced-motion: reduce){
+  .netmap .dashring,.netmap .arcs,.netmap .rays,.netmap .orbit{animation:none;}
+  .netmap .orbit{display:none;}
+}
+.netmap .hubcore,.netmap .hubcore:focus{outline:none;}
 </style>
 </head>
 <body>
@@ -535,9 +578,23 @@ main{min-width:0;}
   <text class="lbl pop" x="140" y="352" text-anchor="start" style="animation-delay:1.54s">Travel &amp; EC</text>
   <circle class="train" r="7" cx="320" cy="200" stroke="var(--l7)"/>
 </g>
-<circle class="hubpulse" cx="320" cy="200" r="40"/>
-<circle class="hubring" cx="320" cy="200" r="40"/>
-<image href="pbp-logo.png" x="286" y="166" width="68" height="68"/>
+<g class="hubfx" aria-hidden="true">
+  <g class="rays"><line class="ray" x1="320" y1="200" x2="470.0" y2="200.0"/><line class="ray" x1="320" y1="200" x2="455.1" y2="265.1"/><line class="ray" x1="320" y1="200" x2="413.5" y2="317.3"/><line class="ray" x1="320" y1="200" x2="353.4" y2="346.2"/><line class="ray" x1="320" y1="200" x2="286.6" y2="346.2"/><line class="ray" x1="320" y1="200" x2="226.5" y2="317.3"/><line class="ray" x1="320" y1="200" x2="184.9" y2="265.1"/><line class="ray" x1="320" y1="200" x2="170.0" y2="200.0"/><line class="ray" x1="320" y1="200" x2="184.9" y2="134.9"/><line class="ray" x1="320" y1="200" x2="226.5" y2="82.7"/><line class="ray" x1="320" y1="200" x2="286.6" y2="53.8"/><line class="ray" x1="320" y1="200" x2="353.4" y2="53.8"/><line class="ray" x1="320" y1="200" x2="413.5" y2="82.7"/><line class="ray" x1="320" y1="200" x2="455.1" y2="134.9"/></g>
+  <circle class="hubpulse" cx="320" cy="200" r="44"/>
+  <circle class="hubpulse p2" cx="320" cy="200" r="44"/>
+  <circle class="hubdisc" cx="320" cy="200" r="66"/>
+  <circle class="dashring" cx="320" cy="200" r="74"/>
+  <g class="arcs"><g class="arcs-in"><path class="arc" data-i="0" d="M323.91 144.14 A56 56 0 0 1 361.24 162.12" stroke="var(--l1)"/><path class="arc" data-i="1" d="M366.11 168.22 A56 56 0 0 1 375.33 208.62" stroke="var(--l2)"/><path class="arc" data-i="2" d="M373.59 216.24 A56 56 0 0 1 347.76 248.64" stroke="var(--l3)"/><path class="arc" data-i="3" d="M340.72 252.03 A56 56 0 0 1 299.28 252.03" stroke="var(--l4)"/><path class="arc" data-i="4" d="M292.24 248.64 A56 56 0 0 1 266.41 216.24" stroke="var(--l5)"/><path class="arc" data-i="5" d="M264.67 208.62 A56 56 0 0 1 273.89 168.22" stroke="var(--l6)"/><path class="arc" data-i="6" d="M278.76 162.12 A56 56 0 0 1 316.09 144.14" stroke="var(--l7)"/></g></g>
+  <g class="orbit o1"><circle cx="320" cy="126" r="5"/></g>
+  <g class="orbit o2"><circle cx="320" cy="134" r="3.5"/></g>
+  <g class="orbit o3"><circle cx="320" cy="122" r="3"/></g>
+  <circle class="shock" cx="320" cy="200" r="46"/>
+  <g class="sparks"><circle class="spark" r="4" cx="320" cy="200" style="--dx:106.3px;--dy:28.5px;fill:var(--l1)"/><circle class="spark" r="4" cx="320" cy="200" style="--dx:77.8px;--dy:77.8px;fill:var(--l2)"/><circle class="spark" r="4" cx="320" cy="200" style="--dx:28.5px;--dy:106.3px;fill:var(--l3)"/><circle class="spark" r="4" cx="320" cy="200" style="--dx:-28.5px;--dy:106.3px;fill:var(--l4)"/><circle class="spark" r="4" cx="320" cy="200" style="--dx:-77.8px;--dy:77.8px;fill:var(--l5)"/><circle class="spark" r="4" cx="320" cy="200" style="--dx:-106.3px;--dy:28.5px;fill:var(--l6)"/><circle class="spark" r="4" cx="320" cy="200" style="--dx:-106.3px;--dy:-28.5px;fill:var(--l7)"/><circle class="spark" r="4" cx="320" cy="200" style="--dx:-77.8px;--dy:-77.8px;fill:var(--l1)"/><circle class="spark" r="4" cx="320" cy="200" style="--dx:-28.5px;--dy:-106.3px;fill:var(--l2)"/><circle class="spark" r="4" cx="320" cy="200" style="--dx:28.5px;--dy:-106.3px;fill:var(--l3)"/><circle class="spark" r="4" cx="320" cy="200" style="--dx:77.8px;--dy:-77.8px;fill:var(--l4)"/><circle class="spark" r="4" cx="320" cy="200" style="--dx:106.3px;--dy:-28.5px;fill:var(--l5)"/></g>
+</g>
+<g class="hubcore">
+  <circle class="hubring" cx="320" cy="200" r="42"/>
+  <image class="hublogo" href="pbp-logo.png" x="284" y="164" width="72" height="72"/>
+</g>
 </svg>
   </div>
 </header>
@@ -960,7 +1017,7 @@ function tick(ts){
     t.phase=(t.phase+dt*t.speed*fast)%2;
     var k=t.phase<1?t.phase:2-t.phase;           /* ping-pong hub <-> terminal */
     var e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;      /* ease in-out between stations */
-    var pt=t.p.getPointAtLength(t.L*(0.12+0.88*e));
+    var pt=t.p.getPointAtLength(t.L*(0.27+0.73*e));
     t.el.setAttribute('cx',pt.x); t.el.setAttribute('cy',pt.y);
   });
   if(running) requestAnimationFrame(tick);
@@ -973,6 +1030,8 @@ if(map){
   document.addEventListener('visibilitychange',function(){ setRunning(!document.hidden); });
 }
 
+var hubcore=map?$('.hubcore',map):null;
+if(hubcore){ hubcore.addEventListener('click',function(e){ var i=(SECS.indexOf(curSec)+1)%SECS.length; go(SECS[i],'hub',e); }); }
 /* ---------- sections ---------- */
 function showSection(id){
   var idx=SECS.indexOf(id); if(idx<0){ idx=0; id=SECS[0]; }
@@ -987,6 +1046,8 @@ function showSection(id){
   if(map){
     map.classList.add('has-sel');
     $$('.grp',map).forEach(function(g){ g.classList.toggle('sel', g.getAttribute('data-sec')===id); });
+    $$('.arc',map).forEach(function(a,i){ a.classList.toggle('on', i===idx); });
+    if(!reducedMotion()){ map.classList.remove('burst'); void map.getBoundingClientRect(); map.classList.add('burst'); clearTimeout(map._bt); map._bt=setTimeout(function(){ map.classList.remove('burst'); },1100); }
   }
   try{ if(location.hash!=='#'+id){ history.replaceState(null,'','#'+id); } }catch(e){}
   if(bar && act && bar.scrollWidth>bar.clientWidth+2){
@@ -1005,7 +1066,7 @@ function scrollToSec(id, force){
 function go(id, from, evt, after){
   var idx=SECS.indexOf(id);
   var same=(id===curSec);
-  var done=function(){ scrollToSec(id, from==='map'||from==='search'); if(after) after(); };
+  var done=function(){ if(from!=='hub') scrollToSec(id, from==='map'||from==='search'); if(after) after(); };
   if(same || reducedMotion() || !document.startViewTransition){ showSection(id); done(); return; }
   var x=window.innerWidth/2, y=window.innerHeight/2;
   if(evt && evt.clientX!=null && (evt.clientX||evt.clientY)){ x=evt.clientX; y=evt.clientY; }
