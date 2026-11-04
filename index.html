@@ -498,9 +498,87 @@ main{min-width:0;}
   .netmap .orbit{display:none;}
 }
 .netmap .hubcore,.netmap .hubcore:focus{outline:none;}
+
+/* =====================  landing gate  ===================== */
+html.gated body{overflow:hidden;}
+.gate{position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:24px 16px calc(24px + env(safe-area-inset-bottom,0px));background:var(--ground);overflow:hidden;}
+html:not(.gated) .gate{display:none;}
+.gate::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1.5px);background-size:22px 22px;}
+.gate-lines{position:absolute;inset:0;width:100%;height:100%;opacity:.55;}
+.gate-lines path{fill:none;stroke-width:12;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1400;stroke-dashoffset:1400;animation:gdraw 1.8s var(--ease) forwards;}
+.gate-lines path:nth-child(2){animation-delay:.1s}.gate-lines path:nth-child(3){animation-delay:.2s}.gate-lines path:nth-child(4){animation-delay:.3s}
+.gate-lines path:nth-child(5){animation-delay:.4s}.gate-lines path:nth-child(6){animation-delay:.5s}.gate-lines path:nth-child(7){animation-delay:.6s}
+@keyframes gdraw{to{stroke-dashoffset:0;}}
+.gate-card{position:relative;width:min(440px,100%);padding:34px 30px 30px;border-radius:28px;background:color-mix(in srgb,var(--board,#04061a) 88%,transparent);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 40px 80px -30px rgba(0,0,0,.8),inset 0 0 0 1px rgba(255,255,255,.1);color:#fff;animation:rise .7s var(--ease) .2s both;}
+.gate-brand{display:flex;align-items:center;gap:14px;}
+.gate-brand img{width:64px;height:64px;border-radius:50%;box-shadow:0 0 0 4px var(--ground),0 0 0 6px rgba(255,255,255,.2);animation:gspin 1.2s cubic-bezier(.3,1.5,.4,1) .4s both;}
+@keyframes gspin{from{transform:rotate(-200deg) scale(.4);opacity:0;}}
+.gate-brand b{display:block;font-size:1.08rem;}
+.gate-brand span{color:var(--ground-sub);font-weight:600;font-size:.95rem;}
+.gate-card h2{margin:26px 0 26px;font-family:var(--f-disp);font-weight:400;font-size:clamp(3rem,14vw,4.4rem);line-height:.9;letter-spacing:-.03em;}
+.gate-card h2 span{display:block;color:var(--l4);}
+.gate-card h2::after{content:"";display:block;width:180px;height:8px;margin-top:16px;border-radius:4px;
+  background:linear-gradient(90deg,var(--l1) 0 14.3%,var(--l2) 0 28.6%,var(--l3) 0 42.9%,var(--l4) 0 57.2%,var(--l5) 0 71.5%,var(--l6) 0 85.8%,var(--l7) 0);}
+.gate-new label{display:block;margin:0 0 8px;font-weight:700;font-size:.92rem;color:var(--ground-sub);}
+#emp{width:100%;height:62px;padding:0 20px;border:0;border-radius:18px;background:rgba(255,255,255,.08);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.18);
+  color:#fff;font:700 1.3rem var(--f-ui);letter-spacing:.06em;text-transform:uppercase;caret-color:var(--l4);outline:none;transition:box-shadow .25s var(--ease),background .25s;}
+#emp::placeholder{color:rgba(220,226,255,.4);letter-spacing:.02em;text-transform:none;font-weight:500;}
+#emp:focus{background:rgba(255,255,255,.11);box-shadow:inset 0 0 0 2px var(--l4),0 0 0 6px rgba(255,184,74,.14);}
+#emp[aria-invalid="true"]{box-shadow:inset 0 0 0 2px var(--l3),0 0 0 6px rgba(217,31,69,.18);animation:shake .35s;}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.gate-err{min-height:1.4em;margin:8px 2px 10px;color:#ff8da1;font-size:.88rem;font-weight:600;}
+.gate-go{position:relative;width:100%;height:62px;border:0;border-radius:999px;background:var(--l1);color:#fff;font:800 1.08rem var(--f-ui);cursor:pointer;overflow:hidden;
+  box-shadow:0 16px 30px -14px var(--l1);transition:transform .25s var(--ease),box-shadow .25s var(--ease);}
+.gate-go::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--l1),var(--l2),var(--l6),var(--l3),var(--l4),var(--l5),var(--l7),var(--l1));background-size:300% 100%;opacity:0;transition:opacity .3s;animation:hue 3s linear infinite;}
+.gate-go:hover::before,.gate-go:focus-visible::before{opacity:1;}
+.gate-go span{position:relative;}
+.gate-go:hover{transform:translateY(-2px);}
+.gate-go:active{transform:scale(.98);}
+@keyframes hue{to{background-position:300% 0;}}
+.gate-back p{margin:0 0 12px;color:var(--ground-sub);font-weight:700;}
+.gate-swap{display:block;margin:16px auto 0;padding:8px;border:0;background:none;color:var(--ground-sub);font:600 .92rem var(--f-ui);text-decoration:underline;text-underline-offset:4px;cursor:pointer;}
+.gate-swap:hover{color:#fff;}
+html.gate-out .gate{animation:gout .7s cubic-bezier(.7,0,.2,1) forwards;}
+@keyframes gout{to{clip-path:circle(0 at 50% 50%);}}
+.gate{clip-path:circle(150vmax at 50% 50%);}
+/* signed-in chip */
+.who{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;padding:6px 6px 6px 14px;border-radius:999px;background:rgba(255,255,255,.07);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);color:var(--ground-sub);font-size:.86rem;font-weight:600;}
+.who b{color:#fff;letter-spacing:.04em;}
+.who button{border:0;border-radius:999px;padding:6px 12px;background:rgba(255,255,255,.1);color:#fff;font:700 .78rem var(--f-ui);cursor:pointer;}
+.who button:hover{background:var(--l1);}
+@media (prefers-reduced-motion: reduce){.gate-lines path{stroke-dashoffset:0;}html.gate-out .gate{animation:none;display:none;}}
 </style>
 </head>
 <body>
+<script>document.documentElement.classList.add('gated');</script>
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-h">
+  <svg class="gate-lines" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <path d="M-20 140 H120 L200 220 V420 L300 520 H420" stroke="var(--l1)"/>
+    <path d="M-20 300 H80 L160 380 V820" stroke="var(--l3)"/>
+    <path d="M420 120 H300 L240 180 V400 L180 460 V820" stroke="var(--l4)"/>
+    <path d="M420 640 H260 L200 580 V420" stroke="var(--l5)"/>
+    <path d="M-20 700 H100 L160 640" stroke="var(--l2)"/>
+    <path d="M260 -20 V60 L300 100 H420" stroke="var(--l7)"/>
+    <path d="M60 -20 V40 L100 80 H200" stroke="var(--l6)"/>
+  </svg>
+  <form class="gate-card" id="gate-form" novalidate>
+    <div class="gate-brand"><img src="pbp-logo.png" alt="PBP logo" width="64" height="64"><div><b>PB Partners</b><span>Ek Rishta Bharose Ka</span></div></div>
+    <h2 id="gate-h">master <span>portal</span></h2>
+    <div class="gate-new" id="gate-new">
+      <label for="emp">Employee ID</label>
+      <input id="emp" name="emp" autocomplete="username" autocapitalize="characters" spellcheck="false" maxlength="24" placeholder="e.g. PW12345" aria-describedby="emp-err" required>
+      <p class="gate-err" id="emp-err" role="alert"></p>
+      <button class="gate-go" type="submit"><span>Start</span></button>
+    </div>
+    <div class="gate-back" id="gate-back" hidden>
+      <p>Welcome back</p>
+      <button class="gate-go" type="button" id="gate-cont"><span>Continue as <b id="gate-id"></b></span></button>
+      <button class="gate-swap" type="button" id="gate-swap">Not you? Use a different ID</button>
+    </div>
+  </form>
+</div>
 <header class="hero">
   <div class="brand">
     <div class="brand-top">
@@ -1276,6 +1354,60 @@ if(SECS.indexOf(initial)>=0){ showSection(initial); }
 else { showSection(SECS[0]); if(map){ map.classList.remove('has-sel'); $$('.grp',map).forEach(function(g){ g.classList.remove('sel'); }); } }
 boardCycle();
 
+
+/* ---------- landing gate: Employee ID -> Google Sheet ---------- */
+var LOG_URL=''; /* paste the Apps Script web app URL here */
+var KEY='mp_emp';
+function getId(){ try{ return localStorage.getItem(KEY)||''; }catch(e){ return ''; } }
+function setId(v){ try{ if(v) localStorage.setItem(KEY,v); else localStorage.removeItem(KEY); }catch(e){} }
+function logVisit(id){
+  if(!LOG_URL) return;
+  var dev=/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)?'Mobile':'Desktop';
+  var body=new URLSearchParams({employeeId:id, device:dev, page:location.hash.replace('#','')||'home', userAgent:navigator.userAgent.slice(0,250)});
+  try{
+    if(!(navigator.sendBeacon && navigator.sendBeacon(LOG_URL, body))){
+      fetch(LOG_URL,{method:'POST',mode:'no-cors',body:body,keepalive:true});
+    }
+  }catch(e){}
+}
+(function(){
+  var root=document.documentElement, gate=$('#gate'), form=$('#gate-form'), inp=$('#emp'), err=$('#emp-err');
+  var vNew=$('#gate-new'), vBack=$('#gate-back');
+  function view(){
+    var id=getId();
+    vBack.hidden=!id; vNew.hidden=!!id;
+    if(id){ $('#gate-id').textContent=id; setTimeout(function(){ $('#gate-cont').focus(); },50); }
+    else setTimeout(function(){ inp.focus(); },300);
+  }
+  function enter(id){
+    setId(id); logVisit(id);
+    $$('.who b').forEach(function(b){ b.textContent=id; });
+    if(reducedMotion()){ root.classList.remove('gated'); return; }
+    root.classList.add('gate-out');
+    setTimeout(function(){ root.classList.remove('gated','gate-out'); },700);
+  }
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var v=inp.value.trim().toUpperCase();
+    var bad=!v?'Please enter your Employee ID.':(!/^[A-Z0-9][A-Z0-9\-_/]{1,23}$/.test(v)?'Use letters and numbers only, like PW12345.':'');
+    inp.setAttribute('aria-invalid',bad?'true':'false'); err.textContent=bad;
+    if(bad){ inp.focus(); return; }
+    enter(v);
+  });
+  inp.addEventListener('input',function(){ if(err.textContent){ err.textContent=''; inp.setAttribute('aria-invalid','false'); } });
+  $('#gate-cont').addEventListener('click',function(){ enter(getId()); });
+  $('#gate-swap').addEventListener('click',function(){ setId(''); inp.value=''; view(); });
+  /* signed-in chip in the hero */
+  var brand=$('.brand');
+  if(brand){
+    var chip=document.createElement('div'); chip.className='who';
+    chip.innerHTML='Signed in as <b></b><button type="button">Switch ID</button>';
+    brand.appendChild(chip);
+    $('b',chip).textContent=getId();
+    $('button',chip).addEventListener('click',function(){ setId(''); inp.value=''; root.classList.add('gated'); window.scrollTo(0,0); view(); });
+  }
+  view();
+})();
 </script>
 </body>
 </html>
