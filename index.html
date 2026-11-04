@@ -1356,7 +1356,7 @@ boardCycle();
 
 
 /* ---------- landing gate: Employee ID -> Google Sheet ---------- */
-var LOG_URL=''; /* paste the Apps Script web app URL here */
+var LOG_URL='https://script.google.com/macros/s/AKfycbwZ-phiQyvlHBF6s5rvIjMBCPRiyHUMiNGIk-tBOXzSwzJl6G1oiijfFlDhm53xI8iP/exec';
 var KEY='mp_emp';
 function getId(){ try{ return localStorage.getItem(KEY)||''; }catch(e){ return ''; } }
 function setId(v){ try{ if(v) localStorage.setItem(KEY,v); else localStorage.removeItem(KEY); }catch(e){} }
