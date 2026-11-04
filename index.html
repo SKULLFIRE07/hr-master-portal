@@ -1363,7 +1363,7 @@ function setId(v){ try{ if(v) localStorage.setItem(KEY,v); else localStorage.rem
 function logVisit(id){
   if(!LOG_URL) return;
   var dev=/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)?'Mobile':'Desktop';
-  var body=new URLSearchParams({employeeId:id, device:dev, page:location.hash.replace('#','')||'home', userAgent:navigator.userAgent.slice(0,250)});
+  var body=new URLSearchParams({employeeId:id, device:dev, userAgent:navigator.userAgent.slice(0,250)});
   try{
     if(!(navigator.sendBeacon && navigator.sendBeacon(LOG_URL, body))){
       fetch(LOG_URL,{method:'POST',mode:'no-cors',body:body,keepalive:true});
